@@ -104,12 +104,15 @@ void InitGPS(void)
 void vGpsHandler (void *pvParameters)
 {
   GPS_INFO stGpsData;          //Структура GPS.
+  GPS_INFO stGpsDataForQueue;          //Структура GPS.
   memset(&stGpsData, 0, sizeof(stGpsData));
+  memset(&stGpsDataForQueue, 0, sizeof(stGpsDataForQueue));
   uint32_t uiMaxTimeGpsReboot;
   uint8_t ucTimeoutMutexUartGps = 0;
+  uint8_t ucDalayGpsValid = 0;
   
   // Создаём очередь
-  xQueueGpsForDebug = xQueueCreate(sizeof(uint8_t), sizeof(stGpsData));
+  xQueueGpsForDebug = xQueueCreate(sizeof(uint8_t), sizeof(stGpsDataForQueue));
   vQueueAddToRegistry(xQueueGpsForDebug, "xQueueGpsForDebug");
   /*
   xQueueGpsDateToRtc = xQueueCreate(sizeof(uiTime), sizeof(uiTime));
@@ -142,16 +145,24 @@ void vGpsHandler (void *pvParameters)
            xQueueSendToFront(xQueueGpsDateToRtc, &uiTime, (portTickType) 0);
         }
         */
-        uiMaxTimeGpsReboot = 0;      
+        stGpsDataForQueue = stGpsData;
+        uiMaxTimeGpsReboot = 0;     
+        ucDalayGpsValid = 0;
       }
       else
       {
         uiMaxTimeGpsReboot++;
+        ucDalayGpsValid++;
         memset(&stGpsData, 0, sizeof(stGpsData));
+
       }  
       
+      if(ucDalayGpsValid > DELAY_GPS_VALID) {
+        memset(&stGpsDataForQueue, 0, sizeof(stGpsDataForQueue));
+      }
+      
       if(xQueueGpsForDebug != 0) {
-           xQueueSendToFront(xQueueGpsForDebug, &stGpsData, (portTickType) 0);
+         xQueueSendToFront(xQueueGpsForDebug, &stGpsDataForQueue, (portTickType) 0);
       }
       memset(&stGpsData, 0, sizeof(stGpsData));
       
@@ -163,8 +174,8 @@ void vGpsHandler (void *pvParameters)
     else
     {
       ucTimeoutMutexUartGps++;
-      if(ucTimeoutMutexUartGps > 5) {
-        ucTimeoutMutexUartGps = 6;
+      if(ucTimeoutMutexUartGps >= MAX_TIME_GPS_NO_MUTEX) {
+        ucTimeoutMutexUartGps = MAX_TIME_GPS_NO_MUTEX;
         memset(&stGpsData, 0, sizeof(stGpsData));
         if(xQueueGpsForDebug != 0) {
            xQueueSendToFront(xQueueGpsForDebug, &stGpsData, (portTickType) 0);

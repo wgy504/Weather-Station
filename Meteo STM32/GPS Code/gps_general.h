@@ -20,8 +20,9 @@
 // Конфигурирование фильтра по остановке в GPS приемнике //
 //  #define GPS_FILTER_STOP_ENABLE
 
+#define DELAY_GPS_VALID                 10
 #define MAX_TIME_NO_VALID_GPS           14400 //4 hour
-#define MAX_TIME_GPS_VALID              60
+#define MAX_TIME_GPS_NO_MUTEX           6
 
 void vGpsHandler (void *pvParameters);
 float GetSpeedKmGps(void);

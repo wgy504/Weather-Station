@@ -1280,12 +1280,6 @@
   <file>
     <name>$PROJ_DIR$\stm32f103x8.icf</name>
   </file>
-  <file>
-    <name>$PROJ_DIR$\stm32f103xB.icf</name>
-    <excluded>
-      <configuration>STM32F103C8 (ROM 64kB, RAM 20kB)</configuration>
-    </excluded>
-  </file>
 </project>
 
 
