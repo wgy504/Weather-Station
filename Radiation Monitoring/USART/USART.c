@@ -581,18 +581,60 @@ void DeInitUSART(uint8_t NumUSART)
 
 void DeInitUSART1(void)
 {
+  // Init Structure
+  GPIO_InitTypeDef GPIO_InitStructure;  
+
+  /* Configure USARTy Rx as input floating */
+  GPIO_InitStructure.GPIO_Pin = USART1_RxPin;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+  GPIO_Init(USART1_PORT, &GPIO_InitStructure);
+  
+  /* Configure USARTy Tx as alternate function push-pull */
+  GPIO_InitStructure.GPIO_Pin = USART1_TxPin;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+  GPIO_Init(USART1_PORT, &GPIO_InitStructure);
+  RCC_APB2PeriphClockCmd(USART1_CLK, DISABLE);
+  
   USART_DeInit(USART1);
   DeInitDMA(1);
 }
 
 void DeInitUSART2(void)
 {
+  // Init Structure
+  GPIO_InitTypeDef GPIO_InitStructure;  
+
+  /* Configure USARTy Rx as input floating */
+  GPIO_InitStructure.GPIO_Pin = USART2_RxPin;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+  GPIO_Init(USART2_PORT, &GPIO_InitStructure);
+  
+  /* Configure USARTy Tx as alternate function push-pull */
+  GPIO_InitStructure.GPIO_Pin = USART2_TxPin;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+  GPIO_Init(USART2_PORT, &GPIO_InitStructure);
+  RCC_APB2PeriphClockCmd(USART2_CLK, DISABLE);
+    
   USART_DeInit(USART2);
   DeInitDMA(2);
 }
 
 void DeInitUSART3(void)
 {
+  // Init Structure
+  GPIO_InitTypeDef GPIO_InitStructure;  
+
+  /* Configure USARTy Rx as input floating */
+  GPIO_InitStructure.GPIO_Pin = USART3_RxPin;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+  GPIO_Init(USART3_PORT, &GPIO_InitStructure);
+  
+  /* Configure USARTy Tx as alternate function push-pull */
+  GPIO_InitStructure.GPIO_Pin = USART3_TxPin;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+  GPIO_Init(USART3_PORT, &GPIO_InitStructure);
+  RCC_APB2PeriphClockCmd(USART3_CLK, DISABLE);
+  
   USART_DeInit(USART3);
   DeInitDMA(3);
 }

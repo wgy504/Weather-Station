@@ -3,7 +3,6 @@
 
 #include "includes.h"
 #include "gsm_parser.h"
-#include "eeprom.h"
 
 typedef enum {
    PROF_FIRST_SERVER         = 0,

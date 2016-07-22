@@ -137,7 +137,7 @@ void vDebugTask (void *pvParameters)
 
   while(1)
   {
- 
+    osDelay(SLEEP_MS_1000);
   }
   
 }

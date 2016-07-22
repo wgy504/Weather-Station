@@ -119,10 +119,10 @@ GLOBAL char g_asCmdBuf[SIZE_IN_DATA_BUF];                      //Буфер для работ
 #include "gsm_mc52iT.h"
 #include "gsm_check.h"
 #include "gsm_info.h"
-//#include "gsm_gprs.h"
+#include "gsm_gprs.h"
 //#include "sms_cmd.h"
 //#include "gsm_sms.h"
-
+#include "gsm_code.h"
 /**************/
 
 #define DBG_RX_BUFFER_SIZE 1
@@ -149,15 +149,5 @@ GLOBAL xSemaphoreHandle mGPS_DATA_ARRIVAL       _EQU(NULL);
 
 GLOBAL  xTaskHandle CurrentTaskHandle;  //ID текущего процесса(Debug)
 GLOBAL  char *pNameCurrentTask;          //Имя текущего процесса(Debug)
-
-typedef enum PROF_CONNECT_SERVER {
-   PROF_FIRST_SERVER         = 0,
-   PROF_SECOND_SERVER        = 1,
-   PROF_FTP_SERVER           = 2,
-   PROF_AGPS_SERVER          = 3,
-   PROF_HTTP_GET_SERVER      = 4,
-   PROF_HTTP_POST_SERVER     = 5,
-} PROF_CONNECT_SERVER;
-
 
 #endif

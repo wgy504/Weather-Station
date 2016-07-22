@@ -19,7 +19,7 @@
   #define AT_SISR_FTP                   "at+ftpget="                            //Принемаем данные ftp
 
   #define ADD_SEND_PAR                  ""
-  #define AT_SMSO                       ""
+  #define AT_SMSO                       "at+cpowd=1"                            //выключаем питание модема(обычно).
   #define AT_CIPCLOSE                   "at+cipclose="                          //зкрыть сокет
   #define AT_CIPSTATUS                  "at+cipstatus="
   #define AT_CNETSCAN1                  "at+cnetscan=1"                         //Получаем более полную инфо о gsm станциях
@@ -137,7 +137,7 @@ void modem_off(void);
 RET_INFO isOK(const char *pCmd, uint32_t wait);
 RET_INFO modem_setting_start(void);
 RET_INFO modem_precmd(void);
-RET_INFO modem_additional_precmd(void);
+RET_INFO modem_second_precmd(void);
 RET_INFO mc(const char *pCmd, u32 second, int count);   // 1 - имя команды, 2 - таймаут команды, 3 - количество попыток ввода команды
 uint32_t get_gsm_time(void);
 void rtc_gsm_settime(const RTC_t *date);

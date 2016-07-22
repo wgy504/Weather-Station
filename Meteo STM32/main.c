@@ -37,6 +37,7 @@ int main()
   xSemaphoreTake(mSEND_DATA_SERVER, SLEEP_MS_100);
   xSemaphoreTake(mINIT_GPS_MODULE, SLEEP_MS_100);
   xSemaphoreTake(mGPS_DATA_ARRIVAL, SLEEP_MS_100);
+  
   // Start Task //
   xTaskCreate(vLcdTask, "vLcdTask", configMINIMAL_STACK_SIZE * 3, NULL, tskIDLE_PRIORITY + 1, &xHandleLcdTask);
   xTaskCreate(vPressureTask, "vPressureTask", configMINIMAL_STACK_SIZE * 1, NULL, tskIDLE_PRIORITY + 1, &xHandlevPressureTask);

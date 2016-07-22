@@ -19,16 +19,19 @@
 #define PORT_LED_CLK      RCC_APB2Periph_GPIOC
 
 // GSM REFERENCE
-#define GSM_REF_PIN                     GPIO_Pin_5
-#define GSM_REF_PORT                    GPIOB
+#define GSM_REF_PIN                     GPIO_Pin_0
+#define GSM_REF_PORT                    GPIOA
 #define GSM_STATUS_ON           1   // В модулях SIM800 он отсутствует.
 
 // START BGS
-#define GSM_PWR_KEY_PIN                 GPIO_Pin_8
-#define GSM_PWR_KEY_PIN_PORT            GPIOA
+#define GSM_PWR_KEY_PIN               GPIO_Pin_1
+#define GSM_PWR_KEY_PORT              GPIOA
     
-#define PWR_KEY_PULL_DOWN                       GPIO_HIGH(GSM_PWR_KEY_PIN_PORT, GSM_PWR_KEY_PIN)
-#define PWR_KEY_PULL_UP                         GPIO_LOW(GSM_PWR_KEY_PIN_PORT, GSM_PWR_KEY_PIN)      
+#define PWR_KEY_PULL_DOWN               GPIO_HIGH(GSM_PWR_KEY_PORT, GSM_PWR_KEY_PIN)
+#define PWR_KEY_PULL_UP                 GPIO_LOW(GSM_PWR_KEY_PORT, GSM_PWR_KEY_PIN)      
+
+#define GSM_DTR_PIN                  GPIO_Pin_4 
+#define GSM_DTR_PORT                 GPIOA 
 
 
 #define LED_ON            GPIO_LOW(PORT_LED, LED);
@@ -60,7 +63,7 @@
 #endif
 
 #define GSM_BAUDRATE    115200
-#define DBG_BAUDRATE    19200
+#define DBG_BAUDRATE    115200
 //**********************//
 
 /// ----- NUM UART ---- ///   

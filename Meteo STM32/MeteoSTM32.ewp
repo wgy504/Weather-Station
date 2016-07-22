@@ -1034,6 +1034,15 @@
       </file>
     </group>
     <group>
+      <name>RTC</name>
+      <file>
+        <name>$PROJ_DIR$\RTC\calendar.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\RTC\rtc.c</name>
+      </file>
+    </group>
+    <group>
       <name>UART</name>
       <file>
         <name>$PROJ_DIR$\USART\USART.c</name>
@@ -1143,15 +1152,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\Pressure Code\pressure_general.c</name>
-    </file>
-  </group>
-  <group>
-    <name>RTC</name>
-    <file>
-      <name>$PROJ_DIR$\RTC\calendar.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\RTC\rtc.c</name>
     </file>
   </group>
   <group>

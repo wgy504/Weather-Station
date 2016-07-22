@@ -329,55 +329,7 @@ RET_INFO modem_on(void)
   return ERR_TIMEOUT;
 }
 
-RET_INFO modem_jamming_detected(u8 ucTimeFindJammingDetect)
-{
-#ifdef GSM_MODULE_BGS2       //
-   return RET_OK;
-#else
-   
-   GSM_INFO data_mc;
-   int ret;
-   int iCountNoJD;
-   iCountNoJD = 30;
-   mc(AT_JD_ON, 4, MC_COUNT);   //Включаем режим детектирования.
-   osDelay(100);
-   for(u8 i = 0; i < ucTimeFindJammingDetect; i++)
-   {
-      ret = gsm_parser(0, &data_mc, g_asRxBuf, sizeof(g_asRxBuf), 10);
-      if(ret) {
-        if(data_mc.m_type == M_SYSSTART) {
-            return ERR_ABORTED;
-        }
-        if(data_mc.m_type == M_STRING) {
-           char *pFindNoJD = strstr(data_mc.msg[0].str, "+SJDR: NO JAMMING");
-           if(pFindNoJD>0) {
-              iCountNoJD--;
-              if(!(iCountNoJD)) {
-                mc(AT_JD_OFF, 4, MC_COUNT);   //Выключаем режим детектирования. 
-                return RET_OK;
-              }
-           }
-           char *pFindYesJD = strstr(data_mc.msg[0].str, "+SJDR: JAMMING DETECTED");
-           if(pFindYesJD>0) {
-              mc(AT_JD_OFF, 4, MC_COUNT);   //Выключаем режим детектирования. 
-              return RET_JD_OK;
-           }
-           char *pFindInterferJD = strstr(data_mc.msg[0].str, "+SJDR: INTERFERENCE DETECTED");
-           if(pFindInterferJD>0) {
-              mc(AT_JD_OFF, 4, MC_COUNT);   //Выключаем режим детектирования. 
-              return RET_JD_OK;
-           }
-        }
-      
-      }
-      osDelay(1000);
-   }
-   mc(AT_JD_OFF, 4, MC_COUNT);   //Выключаем режим детектирования. 
-   return ERR_GPRS_TIMEOUT;
-#endif
-}
-
-RET_INFO modem_additional_precmd(void)
+RET_INFO modem_second_precmd(void)
 {
   //Конфигурим LED под мигание.
   mc(AT_CONFIG_LED, 5, MC_COUNT);
@@ -439,7 +391,16 @@ RET_INFO modem_precmd(void)
       return ERR_TIMEOUT;
    }
    osDelay(10);
-   
+   /*
+   if(mc("at+cfun=1", 4, MC_COUNT) != RET_OK) {
+      return ERR_TIMEOUT;
+   }
+   osDelay(10);
+   if(mc("at+csclk=0", 4, MC_COUNT) != RET_OK) {
+      return ERR_TIMEOUT;
+   }
+   osDelay(10);
+   */
    //Уровень информации об ошибке. 0, — отключено. Будет просто писать ERROR. 1, — код ошибки. Будет возвращать цифровой код ошибки. 2, — описание ошибки.
    if(mc("at+cmee=2", 4, MC_COUNT) != RET_OK) {
       return ERR_TIMEOUT;
@@ -475,10 +436,10 @@ RET_INFO modem_precmd(void)
          if(strlen(data_mc.msg[0].str)-strlen("Revision:") < sizeof(g_stRam.stGsm.strGsmModemSoftware)) {
             memcpy(g_stRam.stGsm.strGsmModemSoftware, FindRev+strlen("Revision:"), strlen(data_mc.msg[0].str) - strlen("Revision:"));
             g_stRam.stGsm.eGsmType = SIMCOM;
-            DS_GSM("D__GMR: ", g_stRam.stGsm.strGsmModemSoftware);
+            DS_GSM("D_GMR: ", g_stRam.stGsm.strGsmModemSoftware);
          }
          else {
-            DS_GSM("D__GMR: ERROR ", data_mc.msg[0].str);
+            DS_GSM("D_GMR: ERROR ", data_mc.msg[0].str);
          }
       }
    }

@@ -26,9 +26,11 @@
 #include "includes.h"
 
 #include "stm32f10x_it.h"
-#include "hw_config.h"
-#include "usb_lib.h"
-#include "usb_istr.h"
+#ifdef DEBUG_OUTPUT_USB
+  #include "hw_config.h"
+  #include "usb_lib.h"
+  #include "usb_istr.h"
+#endif
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
   */
@@ -135,7 +137,7 @@ void DebugMon_Handler(void)
 }
 
 // Interrupt USB //
-
+#ifdef DEBUG_OUTPUT_USB
 /*******************************************************************************
 * Function Name  : USB_IRQHandler
 * Description    : This function handles USB Low Priority interrupts
@@ -174,6 +176,7 @@ void USBWakeUp_IRQHandler(void)
 {
   EXTI_ClearITPendingBit(EXTI_Line18);
 }
+#endif
 /********************************/
 
 #ifndef FREERTOS_CONFIG_H

@@ -18,25 +18,18 @@ RET_INFO ret_gsm = RET_OK;
 // инициализация gprs профилей для соединения с сервером
 RET_INFO profile_gprs_connect(_Bool bTypeProf)
 {
-    GSM_INFO data_profile_gprs_connect;
-    // подключиться к сети GPRS    
-    if(GsmModemConnectGprsService()) {
-       return ERR_GPRS_ACTIVATE;
-    }
+     GSM_INFO data_profile_gprs_connect;
+     // подключиться к сети GPRS    
+     if(GsmModemConnectGprsService()) {
+         return ERR_GPRS_ACTIVATE;
+     }
     
-    //получим mobile country code
-    mc_get("at+cimi", M_STRING, &data_profile_gprs_connect, 1, 4);
-    osDelay(100);
+      //получим mobile country code
+      mc_get("at+cimi", M_STRING, &data_profile_gprs_connect, 1, 4);
+      osDelay(100);
     
-    memcpy(g_stRam.stSim.acMobCountCode, data_profile_gprs_connect.msg[0].str, 5);
-      
-    // даем настройки GPRS APN, strLogin и strPassword.
-    if ((g_stEepConfig.stSim.usManualMode == ON) && (strlen((char const*)g_stEepConfig.stSim.strApn)))
-    {
-      SetupInternetConnectionProfile((char*)g_stEepConfig.stSim.strLogin, (char*)g_stEepConfig.stSim.strPassword, (char*)g_stEepConfig.stSim.strApn, bTypeProf);       //PARAM: user, passwd, apn.
-      return RET_GPRS_OK;
-    }
-        
+      memcpy(g_stRam.stSim.acMobCountCode, data_profile_gprs_connect.msg[0].str, 5);
+              
       if(data_profile_gprs_connect.m_type != M_STRING) 
       {
           return ERR_APN;
@@ -289,7 +282,7 @@ RET_INFO profile_activate(PROF_CONNECT_SERVER nProf, const char *pNameServ)
 {
     GSM_INFO data_profile_gprs_connect;
     err_gprs = 0;
-    count_gprs = g_stEepConfig.stGsm.uc_gprs_timeout;
+    count_gprs = DEF_GPRS_TIMEOUT;
     state_gprs = 0;
     st_connect = 0; 
     unsigned int uiRxSize = 0;
@@ -390,7 +383,7 @@ else //Если у нас ftp соединение.
 }
 #endif
      
-     int timeout_ans = g_stEepConfig.stGsm.uc_gprs_receive_count;
+     int timeout_ans = DEF_GPRS_RECEIVE_COUNT;
      if(nProf == PROF_FTP_SERVER) {
         timeout_ans = TIMEOUT_FTP_CONNECT;
      }
@@ -401,7 +394,7 @@ else //Если у нас ftp соединение.
           osDelay(1000);
         }
         uiRxSize = gsm_parser(0, &data_profile_gprs_connect, g_asRxBuf, RX_BUFFER_SIZE, 5);
-        if( (uiRxSize == 0) &&  (i>=g_stEepConfig.stGsm.uc_gprs_receive_count)  )
+        if( (uiRxSize == 0) &&  (i >= DEF_GPRS_RECEIVE_COUNT)  )
         { 
           err_gprs = err_gprs * 1;
             break;
@@ -465,7 +458,7 @@ int socket_send(u8 nProf, char *data_buf, int data_size, u8 *mask_ready)
     *mask_ready = 0;
     memset(g_asCmdBuf, 0, sizeof(g_asCmdBuf));
     osDelay(100);
-    for(count_gprs = g_stEepConfig.stGsm.uc_gprs_connect_count; count_gprs>0;) 
+    for(count_gprs = DEF_GPRS_RECEIVE_COUNT; count_gprs>0;) 
     {
             osDelay(100);
             if(state_gprs == 0) {
@@ -539,7 +532,7 @@ int socket_send(u8 nProf, char *data_buf, int data_size, u8 *mask_ready)
         
         for(timeout = 100; timeout>0; timeout--) 
         {
-            uiRxSize = gsm_parser(0, &data_profile_gprs_connect, g_asRxBuf, RX_BUFFER_SIZE, g_stEepConfig.stGsm.uc_gprs_timeout);
+            uiRxSize = gsm_parser(0, &data_profile_gprs_connect, g_asRxBuf, RX_BUFFER_SIZE, DEF_GSM_TIMEOUT);
             //DP_GSM("SRV_RX: %s\r", g_asRxBuf);
             if(uiRxSize == 0) {
                 GSM_DC(g_asCmdBuf, '4');
@@ -571,7 +564,7 @@ int socket_send(u8 nProf, char *data_buf, int data_size, u8 *mask_ready)
         }
         
         // ждём сообщение об окончании передачи данных
-        for(count_gprs = g_stEepConfig.stGsm.uc_gprs_wait_send_ok; /*WAIT_SEND_OK*/ count_gprs>0; count_gprs--) 
+        for(count_gprs = DEF_WAIT_SEND_OK; /*WAIT_SEND_OK*/ count_gprs>0; count_gprs--) 
         {
             uiRxSize = gsm_parser(g_asCmdBuf, &data_profile_gprs_connect, g_asRxBuf, RX_BUFFER_SIZE, 1);
             

@@ -6,18 +6,26 @@
 
 // ID Task
 xTaskHandle xHandleDebugTask;
+xTaskHandle xHandleGSM;
+
 
 int main()
 {
   InitGPIO();
   InitTIM3();
 
-  InitIWDG();    // Init Watch Dog 
+  //InitIWDG();    // Init Watch Dog 
   InitBKP();
   rtc_init();
   
+  InitUSART(UART_DBG, DBG_BAUDRATE);
+  InitDMA(UART_DBG);
+  
+  DPS("\r\n-=D_RUN APPL=-\r\n"); 
+  
   // Start Task //
-  xTaskCreate(vDebugTask, "vDebugTask", configMINIMAL_STACK_SIZE * 2, NULL, tskIDLE_PRIORITY + 1, &xHandleDebugTask);
+  xTaskCreate(vDebugTask, "vDebugTask", configMINIMAL_STACK_SIZE * 1, NULL, tskIDLE_PRIORITY + 1, &xHandleDebugTask);
+  xTaskCreate(vGsmTask, "vGsmTask", configMINIMAL_STACK_SIZE * 8, NULL, tskIDLE_PRIORITY + 1, &xHandleGSM);
   
   // Start scheduler //
   osKernelStart(NULL, NULL);
