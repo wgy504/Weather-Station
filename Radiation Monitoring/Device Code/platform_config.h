@@ -18,6 +18,7 @@
 #define PORT_LED          GPIOC
 #define PORT_LED_CLK      RCC_APB2Periph_GPIOC
 
+/*
 // GSM REFERENCE
 #define GSM_REF_PIN                     GPIO_Pin_0
 #define GSM_REF_PORT                    GPIOA
@@ -32,7 +33,13 @@
 
 #define GSM_DTR_PIN                  GPIO_Pin_4 
 #define GSM_DTR_PORT                 GPIOA 
+*/
 
+#define ESP_RST_PIN                  GPIO_Pin_1
+#define ESP_RST_PORT                 GPIOA
+
+#define ESP_CP_PD_PIN                GPIO_Pin_4
+#define ESP_CP_PD_PORT               GPIOA
 
 #define LED_ON            GPIO_LOW(PORT_LED, LED);
 #define LED_OFF           GPIO_HIGH(PORT_LED, LED);
@@ -62,12 +69,14 @@
   #define GPS_BAUDRATE    9600
 #endif
 
-#define GSM_BAUDRATE    115200
+//#define GSM_BAUDRATE    115200
+#define ESP_BAUDRATE    115200
 #define DBG_BAUDRATE    115200
 //**********************//
 
 /// ----- NUM UART ---- ///   
-#define UART_GSM           2           
+//#define UART_GSM           2 
+#define UART_ESP           2
 #define UART_DBG           1  
 #define UART_GPS           3   
 //**********************//

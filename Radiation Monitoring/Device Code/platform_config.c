@@ -21,6 +21,17 @@ void InitGPIO(void)
   GPIO_Init(PORT_LED, &GPIO_InitStructure);
   LED_OFF;
   
+  GPIO_InitStructure.GPIO_Pin = ESP_CP_PD_PIN;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(ESP_CP_PD_PORT, &GPIO_InitStructure);
+  GPIO_HIGH(ESP_CP_PD_PORT, ESP_CP_PD_PIN);
+  
+  GPIO_InitStructure.GPIO_Pin = ESP_RST_PIN;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(ESP_RST_PORT, &GPIO_InitStructure);
+  GPIO_HIGH(ESP_RST_PORT, ESP_RST_PIN);
 }
 
 void InitTIM3(void)

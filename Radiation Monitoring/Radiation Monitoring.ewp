@@ -327,6 +327,9 @@
           <state>$PROJ_DIR$\FreeRTOS</state>
           <state>$PROJ_DIR$\Debug Code</state>
           <state>$PROJ_DIR$\GSM Code</state>
+          <state>$PROJ_DIR$\LCD</state>
+          <state>$PROJ_DIR$\ESP8266</state>
+          <state>$PROJ_DIR$\HTTP Code</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1018,7 +1021,19 @@
   <group>
     <name>Driver Code</name>
     <group>
+      <name>ESP8266</name>
+      <file>
+        <name>$PROJ_DIR$\ESP8266\esp8266.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\ESP8266\esp8266.h</name>
+      </file>
+    </group>
+    <group>
       <name>GSM</name>
+      <excluded>
+        <configuration>STM32F103C8 (ROM 64, RAM20kB)</configuration>
+      </excluded>
       <file>
         <name>$PROJ_DIR$\GSM Code\gsm_check.c</name>
       </file>
@@ -1125,11 +1140,38 @@
   </group>
   <group>
     <name>GSM Code</name>
+    <excluded>
+      <configuration>STM32F103C8 (ROM 64, RAM20kB)</configuration>
+    </excluded>
     <file>
       <name>$PROJ_DIR$\GSM Code\gsm_code.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\GSM Code\gsm_code.h</name>
+    </file>
+  </group>
+  <group>
+    <name>HTTP Code</name>
+    <file>
+      <name>$PROJ_DIR$\HTTP Code\http_general.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HTTP Code\http_general.h</name>
+    </file>
+  </group>
+  <group>
+    <name>LCD Code</name>
+    <file>
+      <name>$PROJ_DIR$\LCD\LCD.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\LCD\LCD.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\LCD\lcd_general.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\LCD\lcd_general.h</name>
     </file>
   </group>
   <group>

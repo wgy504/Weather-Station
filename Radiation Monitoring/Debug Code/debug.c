@@ -8,10 +8,7 @@
 #include "includes.h"
 #include "debug.h"
 
-
 char d_buf[DBG_TX_BUFFER_SIZE];
-
-
 const char * const gsm_rw[]={
     "OK",                       // 00
     "CONNECT",                  // 01
@@ -26,7 +23,33 @@ const char * const gsm_rw[]={
     "TIMEOUT"                   // 0A
 };
 
+#define TIME_SEND_DATA_SERVER   5000
 
+void vDebugTask (void *pvParameters)
+{
+  uint32_t uiTimeSendDataServer = 0;
+  TServer_Data stServerData;
+  
+  while(1)
+  {
+    //Ставим мьютекс готовить данных для сервера.
+    //uiTimeSendDataServer++;
+    if(uiTimeSendDataServer > TIME_SEND_DATA_SERVER) {
+        uiTimeSendDataServer = 0;
+        stServerData.fBackgroundRadiation = 15;
+        stServerData.fIntTemperatur = 20;
+        if(xQueueServerData != 0) {
+             xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
+        }
+        else {
+          uiTimeSendDataServer = TIME_SEND_DATA_SERVER;
+        }
+    }
+    
+    osDelay(SLEEP_MS_1000);
+  }
+  
+}
 
 
 void GSM_DPD(char *pData_Usart, uint16_t Len)
@@ -129,16 +152,3 @@ void GSM_WP(const char *pCmd, const char *pPmd, char res)
     
     DPC('\r');
 }
-
-
-
-void vDebugTask (void *pvParameters)
-{
-
-  while(1)
-  {
-    osDelay(SLEEP_MS_1000);
-  }
-  
-}
-

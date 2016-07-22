@@ -89,8 +89,8 @@
 /**************/
 
 /* LCD */
-//#include "LCD.h"
-//#include "lcd_general.h"
+#include "LCD.h"
+#include "lcd_general.h"
 /***********/
 
 #define RX_BUFFER_SIZE              600         //300
@@ -114,6 +114,7 @@ GLOBAL char g_asCmdBuf[SIZE_IN_DATA_BUF];                      //Буфер для работ
 
 
 /* GSM */
+/*
 #include "gsm_hw.h"
 #include "gsm_parser.h"
 #include "gsm_mc52iT.h"
@@ -123,12 +124,20 @@ GLOBAL char g_asCmdBuf[SIZE_IN_DATA_BUF];                      //Буфер для работ
 //#include "sms_cmd.h"
 //#include "gsm_sms.h"
 #include "gsm_code.h"
+*/
 /**************/
 
+/* ESP8266 */
+#include "esp8266.h"
+#include "http_general.h"
+
+
 #define DBG_RX_BUFFER_SIZE 1
-#define DBG_TX_BUFFER_SIZE 128
-#define GSM_RX_BUFFER_SIZE 1800  //675
-#define GSM_TX_BUFFER_SIZE 350
+#define DBG_TX_BUFFER_SIZE 2048
+//#define GSM_RX_BUFFER_SIZE 1800  //675
+//#define GSM_TX_BUFFER_SIZE 350
+#define ESP_RX_BUFFER_SIZE 2048
+#define ESP_TX_BUFFER_SIZE 2048
 
 #define GPS_RX_BUFFER_SIZE 1  //150
 #define GPS_TX_BUFFER_SIZE 1   //64
@@ -141,7 +150,15 @@ GLOBAL uint8_t g_aucTxBufferUSART1[TX_BUFFER_SIZE1];
 GLOBAL uint8_t g_aucTxBufferUSART2[TX_BUFFER_SIZE2]; 
 GLOBAL uint8_t g_aucTxBufferUSART3[TX_BUFFER_SIZE3]; 
 
-//GLOBAL xQueueHandle xQueueServerData                    _EQU(NULL);             // Очередь данных 
+
+typedef struct {
+  RTC_t stTimeRecords;                                    
+  float fBackgroundRadiation;
+  float fIntTemperatur;                                   
+} TServer_Data;
+
+
+GLOBAL xQueueHandle xQueueServerData                    _EQU(NULL);             // Очередь данных 
 //**********************//
 
 /* Mutex Initialization */
