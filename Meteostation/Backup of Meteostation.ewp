@@ -77,7 +77,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>7.60.1.11206</state>
+          <state>7.50.2.10499</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -89,7 +89,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>STM32F103VB	ST STM32F103VB</state>
+          <state>STM32F103xB	ST STM32F103xB</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -127,7 +127,7 @@
         </option>
         <option>
           <name>GBECoreSlave</name>
-          <version>24</version>
+          <version>22</version>
           <state>38</state>
         </option>
         <option>
@@ -144,12 +144,12 @@
         </option>
         <option>
           <name>CoreVariant</name>
-          <version>24</version>
+          <version>22</version>
           <state>38</state>
         </option>
         <option>
           <name>GFPUDeviceSlave</name>
-          <state>STM32F103VB	ST STM32F103VB</state>
+          <state>STM32F103xB	ST STM32F103xB</state>
         </option>
         <option>
           <name>FPU2</name>
@@ -167,7 +167,7 @@
         </option>
         <option>
           <name>GFPUCoreSlave2</name>
-          <version>24</version>
+          <version>22</version>
           <state>38</state>
         </option>
       </data>
@@ -665,7 +665,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>17</version>
+        <version>16</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -949,10 +949,6 @@
           <name>IlinkThreadsSlave</name>
           <state>1</state>
         </option>
-        <option>
-          <name>IlinkLogCallGraph</name>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -1107,7 +1103,7 @@
         </option>
         <option>
           <name>GBECoreSlave</name>
-          <version>24</version>
+          <version>22</version>
           <state>0</state>
         </option>
         <option>
@@ -1124,7 +1120,7 @@
         </option>
         <option>
           <name>CoreVariant</name>
-          <version>24</version>
+          <version>22</version>
           <state>0</state>
         </option>
         <option>
@@ -1147,7 +1143,7 @@
         </option>
         <option>
           <name>GFPUCoreSlave2</name>
-          <version>24</version>
+          <version>22</version>
           <state>0</state>
         </option>
       </data>
@@ -1624,7 +1620,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>17</version>
+        <version>16</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -1907,10 +1903,6 @@
         <option>
           <name>IlinkThreadsSlave</name>
           <state>1</state>
-        </option>
-        <option>
-          <name>IlinkLogCallGraph</name>
-          <state>0</state>
         </option>
       </data>
     </settings>
