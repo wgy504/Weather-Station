@@ -89,9 +89,14 @@
 /**************/
 
 /* LCD */
-#include "LCD.h"
-#include "lcd_general.h"
+//#include "LCD.h"
+//#include "lcd_general.h"
 /***********/
+
+/* ONEWIRE */
+#include "DS18B20.h"
+/***********/
+
 
 #define RX_BUFFER_SIZE              600         //300
 #define SIZE_IN_DATA_BUF            500         //200
@@ -153,12 +158,17 @@ GLOBAL uint8_t g_aucTxBufferUSART3[TX_BUFFER_SIZE3];
 
 typedef struct {
   RTC_t stTimeRecords;                                    
-  float fBackgroundRadiation;
+  float fDose;
   float fIntTemperatur;                                   
 } TServer_Data;
 
+typedef  struct {
+  int32_t iRealTemperatur;
+  _Bool bDataValid;
+} TOnewire_Data;
 
-GLOBAL xQueueHandle xQueueServerData                    _EQU(NULL);             // Очередь данных 
+GLOBAL xQueueHandle xQueueServerData                    _EQU(NULL);             // Очередь данных
+GLOBAL xQueueHandle xQueueServDataOW                    _EQU(NULL);             
 //**********************//
 
 /* Mutex Initialization */

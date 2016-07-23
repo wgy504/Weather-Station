@@ -18,6 +18,10 @@
 #define PORT_LED          GPIOC
 #define PORT_LED_CLK      RCC_APB2Periph_GPIOC
 
+#define BUZ                      GPIO_Pin_9
+#define PORT_BUZ                 GPIOB
+#define PORT_BUZ_CLK             RCC_APB2Periph_GPIOB
+
 /*
 // GSM REFERENCE
 #define GSM_REF_PIN                     GPIO_Pin_0
@@ -44,6 +48,22 @@
 #define LED_ON            GPIO_LOW(PORT_LED, LED);
 #define LED_OFF           GPIO_HIGH(PORT_LED, LED);
 #define LED_TOGGLE        GPIO_TOGGLE(PORT_LED, LED);
+
+#define BUZ_ON               GPIO_HIGH(PORT_BUZ, BUZ);
+#define BUZ_OFF              GPIO_LOW(PORT_BUZ, BUZ);
+
+#define GEIGER_COUNTER_SBM20
+//#define GEIGER_COUNTER_J305
+
+#ifdef  GEIGER_COUNTER_SBM20
+  #define CONVERSION_FACTOR     (double) 0.0057
+#endif
+#ifdef GEIGER_COUNTER_J305
+ #define CONVERSION_FACTOR      (double) 0.00812
+#endif
+
+#define TIME_MEAS_RADIATION     60
+
 
 /* ---- GSM ---- */
 #define GSM_MODULE_SIM800
@@ -78,7 +98,7 @@
 //#define UART_GSM           2 
 #define UART_ESP           2
 #define UART_DBG           1  
-#define UART_GPS           3   
+//#define UART_GPS           3   
 //**********************//
 
 #define TIM3_PERIOD     1000
@@ -88,5 +108,6 @@ void InitGPIO(void);
 void InitBKP(void);
 void InitTIM3(void);
 void InitIWDG(void);
+void EXTI0_Config(void);
 
 #endif

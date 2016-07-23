@@ -93,7 +93,7 @@ void vWifiEspTask (void *pvParameters)
   {
 
    /* Обработка WEB клиента на два сервера */
-    if( (xQueueReceive(xQueueServerData,  &stServerData, (portTickType) 0)) && (xQueueServerData != 0) ) {  
+    if( (xQueueReceive(xQueueServerData,  &stServerData, (portTickType) 1000)) && (xQueueServerData != 0) ) {  
       iNumConnect = 2;
       _Bool fResetErr = 0;
       
@@ -379,13 +379,13 @@ int SendDataArchiveFirstServer(int iProf, char *ptEspRet, uint16_t Len, TEspNetC
   strcat(ptEspRet, "\n");
   
   if(pServerData->fIntTemperatur > -40) {
-    sprintf(strTempCmd, "#T2#%.02f#Int Temperatur\n", pServerData->fIntTemperatur);
+    sprintf(strTempCmd, "#T2#%.01f#DS18B20\n", pServerData->fIntTemperatur);
     strcat(ptEspRet, strTempCmd);
   }
 
 
-  if(pServerData->fBackgroundRadiation != 0) {
-    sprintf(strTempCmd, "#R1#%.01f#Background Radiation\n", pServerData->fBackgroundRadiation);
+  if(pServerData->fDose != 0) {
+    sprintf(strTempCmd, "#R1#%.00f#SBM-20 gamma\n", pServerData->fDose);
     strcat(ptEspRet, strTempCmd);
   }
   
@@ -467,8 +467,8 @@ int SendDataArchiveSecondServer(int iProf, char *ptEspRet, uint16_t Len, TEspNet
   
   sprintf(ptEspRet, "GET /update?key=%s",  pEspNetConfig->strWriteApiKey);
   
-  if(pServerData->fBackgroundRadiation != 0) {
-    sprintf(strTempCmd, "&field1=%.01f", pServerData->fBackgroundRadiation);
+  if(pServerData->fDose != 0) {
+    sprintf(strTempCmd, "&field1=%.00f", pServerData->fDose);
     strcat(ptEspRet, strTempCmd);
   }
 

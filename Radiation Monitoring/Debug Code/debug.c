@@ -23,22 +23,58 @@ const char * const gsm_rw[]={
     "TIMEOUT"                   // 0A
 };
 
-#define TIME_SEND_DATA_SERVER   5000
+int32_t ConvertsTemperatur(uint8_t *pIn);
+uint16_t GetCPM(void);
+void ClearCPM(void);
+
+#define TIME_SEND_DATA_SERVER   600
+
+uint16_t g_usCPM = 0;
 
 void vDebugTask (void *pvParameters)
 {
+  uint16_t usBackCMP = 0;
+  uint32_t uiCurSec = 0;  
+  uint32_t uiTimeMeas = 0;
+  RTC_t eDate;
+  memset(&eDate, 0, sizeof(&eDate));
+  portTickType xLastWakeTimerDelay;
   uint32_t uiTimeSendDataServer = 0;
   TServer_Data stServerData;
+  stServerData.fDose = 0;
+  stServerData.fIntTemperatur = 0;
+  float fIndTempValue;
   
   while(1)
   {
-    //Ставим мьютекс готовить данных для сервера.
-    //uiTimeSendDataServer++;
-    if(uiTimeSendDataServer > TIME_SEND_DATA_SERVER) {
-        uiTimeSendDataServer = 0;
-        stServerData.fBackgroundRadiation = 15;
-        stServerData.fIntTemperatur = 20;
+    if(xQueueServDataOW != NULL) {
+        xQueueReceive(xQueueServDataOW,  &fIndTempValue, (portTickType) 0);
+        stServerData.fIntTemperatur = fIndTempValue;
+    }
+    
+    rtc_gettime(&eDate);
+    uiCurSec = Date2Sec(&eDate);
+    
+    if(uiTimeMeas <= uiCurSec) {
+      uiTimeMeas = uiCurSec + TIME_MEAS_RADIATION;
+      uint16_t uiCPM = GetCPM();
+      stServerData.fDose = (float)uiCPM;
+      ClearCPM();
+      stServerData.fDose *= 100 * CONVERSION_FACTOR;
+      DP_GSM("\r\nD_CUR DATA:\r\nCPM %i\r\nDose %.00fmR\r\nTemperature %.01fC\r\n\r\n", uiCPM, stServerData.fDose, stServerData.fIntTemperatur);      
+      if(stServerData.fDose > 75) {
+        BUZ_ON;
+      }
+      else {
+        BUZ_OFF;
+      }
+    }
+ 
+    /* Send Data To Queue */
+    if( (uiTimeSendDataServer <= uiCurSec) && (stServerData.fDose && stServerData.fIntTemperatur) ) {
+        uiTimeSendDataServer = uiCurSec + TIME_SEND_DATA_SERVER;
         if(xQueueServerData != 0) {
+             DP_GSM("\r\nD_SERVER DATA:\r\nDose %.00fmR\r\nTemperature %.01fC\r\n\r\n", stServerData.fDose, stServerData.fIntTemperatur);
              xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
         }
         else {
@@ -46,9 +82,132 @@ void vDebugTask (void *pvParameters)
         }
     }
     
-    osDelay(SLEEP_MS_1000);
+    if(usBackCMP != GetCPM()) {
+      usBackCMP = GetCPM();
+      LED_ON;
+    }
+    xLastWakeTimerDelay = xTaskGetTickCount();
+    vTaskDelayUntil(&xLastWakeTimerDelay, (SLEEP_MS_100 / portTICK_RATE_MS));
+    LED_OFF;
   }
   
+}
+
+void EXTI0_IRQHandler(void)
+{
+  if(EXTI_GetITStatus(EXTI_Line0) != RESET)
+  {
+    g_usCPM++;
+    /* Clear the  EXTI line 0 pending bit */
+    EXTI_ClearITPendingBit(EXTI_Line0);
+  }
+}
+
+void ClearCPM(void)
+{
+  g_usCPM = 0;
+}
+
+uint16_t GetCPM(void)
+{
+  return g_usCPM;
+}
+
+void vOnewireTask (void *pvParameters)
+{
+  uint8_t ucTempBufTemper[2];
+  TOnewire_Data stTemperaturData;
+  float fDataToServ = 0;
+  
+  OW_Init();
+  memset(&stTemperaturData, 0, sizeof(stTemperaturData));
+  
+   // Создаём очередь struct данных 
+  xQueueServDataOW = xQueueCreate(sizeof(uint8_t), sizeof(float));
+  vQueueAddToRegistry(xQueueServDataOW, "xQueueServDataOW");
+  
+  xQueueSendToFront(xQueueServDataOW, &fDataToServ, SLEEP_MS_100);
+  
+  while(1)
+  {
+    // Заставляем первый термометр провести измерение температуры    
+    OW_Send(OW_SEND_RESET, "\xcc\x44", 2, NULL, NULL, OW_NO_READ);
+    
+    // назначаем функцию двухтактного выхода - подаем "питание" на шину
+    OW_out_set_as_Power_pin();
+    
+    // выдерживаем время измерения (например 750 мс для 12-битного измерения)
+    osDelay(SLEEP_MS_750);
+
+    // восстанавливаем функцию передатчика UART
+    OW_out_set_as_TX_pin();
+
+    // читаем показания первого термометра      
+    if(OW_Send(OW_SEND_RESET, "\xcc\xbe\xff\xff", 4, ucTempBufTemper, 2, 2) == OW_OK) {
+      stTemperaturData.iRealTemperatur = ConvertsTemperatur(ucTempBufTemper);
+      stTemperaturData.bDataValid = 1;
+    }
+    else  {
+       stTemperaturData.iRealTemperatur = -850;
+       stTemperaturData.bDataValid = 0;
+    }
+    
+    fDataToServ = (float)stTemperaturData.iRealTemperatur/10;
+    xQueueSendToFront(xQueueServDataOW, &fDataToServ, SLEEP_MS_100);
+
+  }
+}
+
+
+int32_t ConvertsTemperatur(uint8_t *pIn)
+{
+    unsigned char Temp_H = 0;
+    unsigned char Temp_L = 0;
+    
+    char strTemp[4];
+    _Bool temp_flag;
+    uint8_t tempint = 0,tempint1,tempint2,tempint3; // переменные для целого значения температуры
+    uint16_t temppoint = 0,temppoint1; // переменные для дробного значения температуры
+
+    Temp_L = pIn[0]; // читаем первые 2 байта блокнота
+    Temp_H = pIn[1];
+
+    temp_flag = 1;         // флаг знака температуры равен 1(плюс)
+
+    if(Temp_H &(1 << 3))   // проверяем бит знака температуры на равенство единице 
+    {			
+            signed int tmp;
+            temp_flag = 0;      // флаг знака равен 0(минус)
+            tmp = (Temp_H << 8) | Temp_L;
+            tmp = -tmp;
+            Temp_L = tmp;
+            Temp_H = tmp >> 8; 
+    }		
+
+    tempint = ((Temp_H << 4) & 0x70)|(Temp_L >> 4); // вычисляем целое значение температуры
+    tempint1 = tempint % 1000 / 100;  
+    tempint2 = (tempint % 100 / 10) + 0x30;  
+    tempint3 = (tempint % 10) + 0x30; 
+                   
+    temppoint = Temp_L & 0x0F; // вычисляем дробное значение температуры
+    temppoint = temppoint * 625;       // точность температуры 
+    temppoint1 = (temppoint / 1000) + 0x30;        
+            
+            
+    if(temp_flag==0) { // если флаг знака температуры равен 0, в первом разряде ставим минус
+            tempint1 = '-';
+    }
+    else{
+            tempint1 = '+';
+    }
+
+
+    strTemp[0]=tempint1;
+    strTemp[1]=tempint2;
+    strTemp[2]=tempint3;
+    strTemp[3]=temppoint1;
+    
+    return atoi(strTemp);
 }
 
 

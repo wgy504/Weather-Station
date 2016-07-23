@@ -1197,6 +1197,15 @@
   <group>
     <name>Driver Code</name>
     <group>
+      <name>DS18B20</name>
+      <file>
+        <name>$PROJ_DIR$\DS18B20\DS18B20.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\DS18B20\DS18B20.h</name>
+      </file>
+    </group>
+    <group>
       <name>ESP8266</name>
       <file>
         <name>$PROJ_DIR$\ESP8266\esp8266.c</name>

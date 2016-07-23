@@ -18,5 +18,6 @@ void DS_GSM(const char *msg, const char *pData_Usart);
 void GSM_DPD(char *pData_Usart, uint16_t Len);
 
 void vDebugTask (void *pvParameters);
+void vOnewireTask (void *pvParameters);
 
 #endif
