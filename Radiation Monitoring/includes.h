@@ -40,6 +40,7 @@
 #define SLEEP_MS_1000   1000
 #define SLEEP_MS_750    750
 #define SLEEP_MS_500    500
+#define SLEEP_MS_300    300
 #define SLEEP_MS_250    250
 #define SLEEP_MS_200    200
 #define SLEEP_MS_150    150

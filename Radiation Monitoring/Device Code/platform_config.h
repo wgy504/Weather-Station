@@ -45,6 +45,13 @@
 #define ESP_CP_PD_PIN                GPIO_Pin_4
 #define ESP_CP_PD_PORT               GPIOA
 
+
+#define DRF_EN_PIN                GPIO_Pin_11
+#define DRF_EN_PORT               GPIOA
+
+#define DRF_SET_PIN               GPIO_Pin_12
+#define DRF_SET_PORT              GPIOA
+
 #define LED_ON            GPIO_LOW(PORT_LED, LED);
 #define LED_OFF           GPIO_HIGH(PORT_LED, LED);
 #define LED_TOGGLE        GPIO_TOGGLE(PORT_LED, LED);
@@ -56,10 +63,10 @@
 //#define GEIGER_COUNTER_J305
 
 #ifdef  GEIGER_COUNTER_SBM20
-  #define CONVERSION_FACTOR     (double) 0.0057
+  #define CONVERSION_FACTOR     (double) 0.0057 * 98
 #endif
 #ifdef GEIGER_COUNTER_J305
- #define CONVERSION_FACTOR      (double) 0.00812
+ #define CONVERSION_FACTOR      (double) 0.00812 * 98
 #endif
 
 #define TIME_MEAS_RADIATION     60
@@ -91,7 +98,7 @@
 
 //#define GSM_BAUDRATE    115200
 #define ESP_BAUDRATE    115200
-#define DBG_BAUDRATE    115200
+#define DBG_BAUDRATE    9600
 //**********************//
 
 /// ----- NUM UART ---- ///   

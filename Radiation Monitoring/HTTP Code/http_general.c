@@ -411,6 +411,7 @@ int SendDataArchiveFirstServer(int iProf, char *ptEspRet, uint16_t Len, TEspNetC
    
   DPS("esp [->] ");
   Delay(SLEEP_MS_10);
+  
   /* Передаем данные */
   for(uint16_t i=0; i<Len; i++) {
       esp_write(&ptEspRet[i], 1);

@@ -17,7 +17,7 @@ void InitGPIO(void)
   // Init Led Light Pin
   RCC_APB2PeriphClockCmd(PORT_LED_CLK, ENABLE);
   GPIO_InitStructure.GPIO_Pin = LED;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(PORT_LED, &GPIO_InitStructure);
   LED_OFF;
@@ -25,22 +25,36 @@ void InitGPIO(void)
   // Init Buzzer
   RCC_APB2PeriphClockCmd(PORT_BUZ_CLK, ENABLE);
   GPIO_InitStructure.GPIO_Pin = BUZ;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(PORT_BUZ, &GPIO_InitStructure);
   BUZ_OFF;
   
+  /* WIFI ESP */
   GPIO_InitStructure.GPIO_Pin = ESP_CP_PD_PIN;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(ESP_CP_PD_PORT, &GPIO_InitStructure);
   GPIO_HIGH(ESP_CP_PD_PORT, ESP_CP_PD_PIN);
   
   GPIO_InitStructure.GPIO_Pin = ESP_RST_PIN;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(ESP_RST_PORT, &GPIO_InitStructure);
   GPIO_HIGH(ESP_RST_PORT, ESP_RST_PIN);
+  
+  /* RADIO */
+  GPIO_InitStructure.GPIO_Pin = DRF_EN_PIN;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(DRF_EN_PORT, &GPIO_InitStructure);
+  GPIO_HIGH(DRF_EN_PORT, DRF_EN_PIN);
+  
+  GPIO_InitStructure.GPIO_Pin = DRF_SET_PIN;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(DRF_SET_PORT, &GPIO_InitStructure);
+  GPIO_HIGH(DRF_SET_PORT, DRF_SET_PIN);
 }
 
 void InitTIM3(void)
@@ -103,7 +117,7 @@ void InitIWDG(void)
   IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
 
   /* IWDG counter clock: LSI/32 */
-  IWDG_SetPrescaler(IWDG_Prescaler_64);
+  IWDG_SetPrescaler(IWDG_Prescaler_256);
 
   /* Set counter reload value to obtain 250ms IWDG TimeOut.
      Counter Reload Value = 250ms/IWDG counter clock period

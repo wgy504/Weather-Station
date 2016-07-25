@@ -30,12 +30,17 @@ void ClearCPM(void);
 #define TIME_SEND_DATA_SERVER   600
 
 uint16_t g_usCPM = 0;
+uint16_t ga_usDoseValue[256];
 
 void vDebugTask (void *pvParameters)
 {
+  BUZ_ON;
   uint16_t usBackCMP = 0;
   uint32_t uiCurSec = 0;  
   uint32_t uiTimeMeas = 0;
+  uint8_t ucMeanCounter = 0;
+  uint32_t uiMeanValueDose =  0;
+  
   RTC_t eDate;
   memset(&eDate, 0, sizeof(&eDate));
   portTickType xLastWakeTimerDelay;
@@ -44,6 +49,21 @@ void vDebugTask (void *pvParameters)
   stServerData.fDose = 0;
   stServerData.fIntTemperatur = 0;
   float fIndTempValue;
+  
+  osDelay(SLEEP_MS_300);
+  BUZ_OFF;
+  ClearCPM();
+  
+  DPS("WAITING FOR FIRST CHANGE\r\n");
+  
+  for(uint8_t i=0; i<59; i++) {
+    xLastWakeTimerDelay = xTaskGetTickCount();
+    vTaskDelayUntil(&xLastWakeTimerDelay, (SLEEP_MS_1000 / portTICK_RATE_MS));
+  }
+  if(xQueueServDataOW != NULL) {
+     xQueueReceive(xQueueServDataOW,  &fIndTempValue, (portTickType) 0);
+     //stServerData.fIntTemperatur = fIndTempValue;
+  }
   
   while(1)
   {
@@ -60,8 +80,11 @@ void vDebugTask (void *pvParameters)
       uint16_t uiCPM = GetCPM();
       stServerData.fDose = (float)uiCPM;
       ClearCPM();
-      stServerData.fDose *= 100 * CONVERSION_FACTOR;
-      DP_GSM("\r\nD_CUR DATA:\r\nCPM %i\r\nDose %.00fmR\r\nTemperature %.01fC\r\n\r\n", uiCPM, stServerData.fDose, stServerData.fIntTemperatur);      
+      stServerData.fDose *= CONVERSION_FACTOR;
+      ga_usDoseValue[ucMeanCounter] = (uint16_t) stServerData.fDose;
+      ucMeanCounter++;
+      DP_GSM("\r\nD_CUR DATA:\r\nCPM %i\r\nDose %.00fmR\r\nTemperature %.01fC\r\n", uiCPM, stServerData.fDose, stServerData.fIntTemperatur);      
+      DP_GSM("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
       if(stServerData.fDose > 75) {
         BUZ_ON;
       }
@@ -74,8 +97,17 @@ void vDebugTask (void *pvParameters)
     if( (uiTimeSendDataServer <= uiCurSec) && (stServerData.fDose && stServerData.fIntTemperatur) ) {
         uiTimeSendDataServer = uiCurSec + TIME_SEND_DATA_SERVER;
         if(xQueueServerData != 0) {
-             DP_GSM("\r\nD_SERVER DATA:\r\nDose %.00fmR\r\nTemperature %.01fC\r\n\r\n", stServerData.fDose, stServerData.fIntTemperatur);
-             xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
+          for(uint8_t i=0; i<ucMeanCounter; i++) {
+            uiMeanValueDose += (uint32_t)ga_usDoseValue[i];
+          }
+          uiMeanValueDose /= (uint32_t)ucMeanCounter;
+            
+          stServerData.fDose = (float)uiMeanValueDose;
+          DP_GSM("\r\nD_MEAN DATA:\r\nDose %.00fmR\r\nTemperature %.01fC\r\n\r\n", stServerData.fDose, stServerData.fIntTemperatur);
+          xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
+          uiMeanValueDose = 0;
+          memset(ga_usDoseValue, 0, sizeof(ga_usDoseValue));
+          ucMeanCounter = 0;
         }
         else {
           uiTimeSendDataServer = TIME_SEND_DATA_SERVER;
@@ -126,7 +158,7 @@ void vOnewireTask (void *pvParameters)
   xQueueServDataOW = xQueueCreate(sizeof(uint8_t), sizeof(float));
   vQueueAddToRegistry(xQueueServDataOW, "xQueueServDataOW");
   
-  xQueueSendToFront(xQueueServDataOW, &fDataToServ, SLEEP_MS_100);
+  //xQueueSendToFront(xQueueServDataOW, &fDataToServ, SLEEP_MS_100);
   
   while(1)
   {

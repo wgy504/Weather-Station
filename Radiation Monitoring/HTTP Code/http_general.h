@@ -7,7 +7,7 @@
 
 #define TIME_OPEN_SOCKET        5000    //SEC
 
-#define MAX_ERR_SEND_FIRST_SERVER       2
+#define MAX_ERR_SEND_FIRST_SERVER       3
 #define MAX_ERR_SEND_SECOND_SERVER      3
 
 #define INT_TEMPERATUR_TRANSMIT_SERVER

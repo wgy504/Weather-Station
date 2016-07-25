@@ -15,9 +15,9 @@ xTaskHandle xHandleOnewireTask;
 int main()
 {
   InitGPIO();
-  InitTIM3();
+  //InitTIM3();
 
-  //InitIWDG();    // Init Watch Dog 
+  InitIWDG();    // Init Watch Dog 
   InitBKP();
   rtc_init();
 
@@ -29,8 +29,7 @@ int main()
   InitUSART(UART_DBG, DBG_BAUDRATE);
   InitDMA(UART_DBG);
   
-  DPS("\r\n-=D_RUN APPL=-\r\n"); 
-  
+  DPS("\r\n-=D_RUN APPL=-\r\n");
   // Start Task //
   xTaskCreate(vDebugTask, "vDebugTask", configMINIMAL_STACK_SIZE * 4, NULL, tskIDLE_PRIORITY + 3, &xHandleDebugTask);
   //xTaskCreate(vLcdTask, "vLcdTask", configMINIMAL_STACK_SIZE * 2, NULL, tskIDLE_PRIORITY + 1, &xHandleLcdTask);
