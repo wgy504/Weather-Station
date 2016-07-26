@@ -31,6 +31,8 @@ void ClearCPM(void);
 
 uint16_t g_usCPM = 0;
 uint16_t ga_usDoseValue[256];
+uint16_t ga_usCpmValue[256];
+uint16_t ga_usDoseValueDay[1440];
 
 void vDebugTask (void *pvParameters)
 {
@@ -39,7 +41,9 @@ void vDebugTask (void *pvParameters)
   uint32_t uiCurSec = 0;  
   uint32_t uiTimeMeas = 0;
   uint8_t ucMeanCounter = 0;
-  uint32_t uiMeanValueDose =  0;
+  uint16_t usMeanCounterDay = 0;
+  double dCPM_Day = 0;
+  double dDose_Day = 0;
   
   RTC_t eDate;
   memset(&eDate, 0, sizeof(&eDate));
@@ -77,13 +81,30 @@ void vDebugTask (void *pvParameters)
     
     if(uiTimeMeas <= uiCurSec) {
       uiTimeMeas = uiCurSec + TIME_MEAS_RADIATION;
-      uint16_t uiCPM = GetCPM();
-      stServerData.fDose = (float)uiCPM;
+      uint16_t usCPM = GetCPM();
+      stServerData.fDose = (float)usCPM;
       ClearCPM();
       stServerData.fDose *= CONVERSION_FACTOR;
       ga_usDoseValue[ucMeanCounter] = (uint16_t) stServerData.fDose;
+      ga_usCpmValue[ucMeanCounter] = usCPM;
+      
+      ga_usDoseValueDay[usMeanCounterDay] = (uint16_t) stServerData.fDose;
+      dCPM_Day += usCPM;
       ucMeanCounter++;
-      DP_GSM("\r\nD_CUR DATA:\r\nCPM %i\r\nDose %.00fmR\r\nTemperature %.01fC\r\n", uiCPM, stServerData.fDose, stServerData.fIntTemperatur);      
+      usMeanCounterDay++;
+      if(usMeanCounterDay > sizeof(ga_usDoseValueDay)) {
+         for(uint16_t i=0; i<usMeanCounterDay; i++) {
+            dDose_Day += ga_usDoseValueDay[i];
+         }
+         dDose_Day /= (double)usMeanCounterDay;
+         stServerData.fDoseDay = dDose_Day;
+         stServerData.iCPM_Day = (int)dCPM_Day;
+         dCPM_Day = 0;
+         dDose_Day = 0;
+         usMeanCounterDay = 0;
+      }
+      
+      DP_GSM("\r\nD_CUR DATA:\r\nCurCPM %i\r\nCurDose %.00fmR\r\nCurTemperature %.01fC\r\n", usCPM, stServerData.fDose, stServerData.fIntTemperatur);      
       DP_GSM("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
       if(stServerData.fDose > 75) {
         BUZ_ON;
@@ -97,14 +118,24 @@ void vDebugTask (void *pvParameters)
     if( (uiTimeSendDataServer <= uiCurSec) && (stServerData.fDose && stServerData.fIntTemperatur) ) {
         uiTimeSendDataServer = uiCurSec + TIME_SEND_DATA_SERVER;
         if(xQueueServerData != 0) {
+          uint32_t uiMeanValueDose =  0;
+          uint32_t uiMeanValueCPM =  0;
           for(uint8_t i=0; i<ucMeanCounter; i++) {
             uiMeanValueDose += (uint32_t)ga_usDoseValue[i];
+            uiMeanValueCPM += (uint32_t)ga_usCpmValue[i];
           }
           uiMeanValueDose /= (uint32_t)ucMeanCounter;
+          uiMeanValueCPM /= (uint32_t)ucMeanCounter;
             
           stServerData.fDose = (float)uiMeanValueDose;
-          DP_GSM("\r\nD_MEAN DATA:\r\nDose %.00fmR\r\nTemperature %.01fC\r\n\r\n", stServerData.fDose, stServerData.fIntTemperatur);
+          stServerData.iCPM = (int)uiMeanValueCPM;
+          DP_GSM("\r\nD_MEAN DATA:\r\nMeanCPM %i\r\nMeanDose %.00fmR\r\nCurTemperature %.01fC\r\n\r\n", uiMeanValueCPM, stServerData.fDose, stServerData.fIntTemperatur);
           xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
+          if(stServerData.iCPM_Day && stServerData.fDoseDay) {
+             DP_GSM("\r\nD_DAY DATA:\r\nDayCPM %i\r\nDayDose %.00fmR\r\n\r\n", stServerData.iCPM_Day, stServerData.fDoseDay);
+             stServerData.iCPM_Day = 0;
+             stServerData.fDoseDay = 0;
+          }
           uiMeanValueDose = 0;
           memset(ga_usDoseValue, 0, sizeof(ga_usDoseValue));
           ucMeanCounter = 0;

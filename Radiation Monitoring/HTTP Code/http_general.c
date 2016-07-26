@@ -477,6 +477,22 @@ int SendDataArchiveSecondServer(int iProf, char *ptEspRet, uint16_t Len, TEspNet
     sprintf(strTempCmd, "&field2=%.01f", pServerData->fIntTemperatur);
     strcat(ptEspRet, strTempCmd);
   }
+  
+  if(pServerData->iCPM != 0) {
+    sprintf(strTempCmd, "&field3=%i", pServerData->iCPM);
+    strcat(ptEspRet, strTempCmd);
+  }
+  
+  if(pServerData->fDoseDay != 0) {
+    sprintf(strTempCmd, "&field4=%.00f", pServerData->fDoseDay);
+    strcat(ptEspRet, strTempCmd);
+  }
+  
+  if(pServerData->iCPM_Day !=0) {
+    sprintf(strTempCmd, "&field5=%i", pServerData->iCPM_Day);
+    strcat(ptEspRet, strTempCmd);
+  }
+  
   strcat(ptEspRet, "\r\n");
     
   for(uint8_t i=0; i<2; i++) {

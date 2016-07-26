@@ -138,12 +138,12 @@ GLOBAL char g_asCmdBuf[SIZE_IN_DATA_BUF];                      //Буфер для работ
 #include "http_general.h"
 
 
-#define DBG_RX_BUFFER_SIZE 1
-#define DBG_TX_BUFFER_SIZE 2048
+#define DBG_RX_BUFFER_SIZE 64
+#define DBG_TX_BUFFER_SIZE 1536
 //#define GSM_RX_BUFFER_SIZE 1800  //675
 //#define GSM_TX_BUFFER_SIZE 350
-#define ESP_RX_BUFFER_SIZE 2048
-#define ESP_TX_BUFFER_SIZE 2048
+#define ESP_RX_BUFFER_SIZE 1536
+#define ESP_TX_BUFFER_SIZE 1280
 
 #define GPS_RX_BUFFER_SIZE 1  //150
 #define GPS_TX_BUFFER_SIZE 1   //64
@@ -160,7 +160,10 @@ GLOBAL uint8_t g_aucTxBufferUSART3[TX_BUFFER_SIZE3];
 typedef struct {
   RTC_t stTimeRecords;                                    
   float fDose;
-  float fIntTemperatur;                                   
+  float fIntTemperatur;
+  int iCPM;
+  float fDoseDay;
+  int iCPM_Day;
 } TServer_Data;
 
 typedef  struct {
