@@ -325,12 +325,13 @@
           <state>$PROJ_DIR$\StdPeriphLib\CMSIS\Include</state>
           <state>$PROJ_DIR$\FreeRTOS\include</state>
           <state>$PROJ_DIR$\FreeRTOS</state>
-          <state>$PROJ_DIR$\Debug Code</state>
           <state>$PROJ_DIR$\GSM Code</state>
           <state>$PROJ_DIR$\LCD</state>
           <state>$PROJ_DIR$\ESP8266</state>
           <state>$PROJ_DIR$\HTTP Code</state>
           <state>$PROJ_DIR$\DS18B20</state>
+          <state>$PROJ_DIR$\Command Device Code</state>
+          <state>$PROJ_DIR$\Radmon Code</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -978,12 +979,15 @@
     </settings>
   </configuration>
   <group>
-    <name>Debug Code</name>
+    <name>Command Device Code</name>
     <file>
-      <name>$PROJ_DIR$\Debug Code\debug.c</name>
+      <name>$PROJ_DIR$\Command Device Code\cmd_commands.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\Debug Code\debug.h</name>
+      <name>$PROJ_DIR$\Command Device Code\cmd_func.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Command Device Code\cmd_parser.c</name>
     </file>
   </group>
   <group>
@@ -1185,6 +1189,15 @@
     </file>
     <file>
       <name>$PROJ_DIR$\LCD\lcd_general.h</name>
+    </file>
+  </group>
+  <group>
+    <name>Radmon Code</name>
+    <file>
+      <name>$PROJ_DIR$\Radmon Code\radmon_general.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Radmon Code\radmon_general.h</name>
     </file>
   </group>
   <group>

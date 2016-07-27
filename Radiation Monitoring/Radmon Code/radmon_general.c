@@ -1,12 +1,12 @@
 
-#include "debug.h"
+#include "radmon_general.h"
 #include "includes.h"
 
 
 #include <stdarg.h>
 
 #include "includes.h"
-#include "debug.h"
+#include "radmon_general.h"
 
 char d_buf[DBG_TX_BUFFER_SIZE];
 const char * const gsm_rw[]={
@@ -35,7 +35,7 @@ uint16_t ga_usDoseValue[256];
 uint16_t ga_usCpmValue[256];
 uint16_t ga_usDoseValueDay[1440];
 
-void vDebugTask (void *pvParameters)
+void vRadMonTask (void *pvParameters)
 {
   BUZ_ON;
   uint16_t usBackCMP = 0;
@@ -62,8 +62,7 @@ void vDebugTask (void *pvParameters)
   BUZ_OFF;
   ClearCPM();
   
-  DPS("D_WAITING FOR FIRST CHANGE\r\n");
-  
+  DP_GSM("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
   for(int i=59; i > 0; i--) {
     IWDG_ReloadCounter();
     xLastWakeTimerDelay = xTaskGetTickCount();
@@ -113,7 +112,7 @@ void vDebugTask (void *pvParameters)
       
       DP_GSM("\r\nD_CUR DATA:\r\nCurCPM %i\r\nCurDose %.00fmR\r\nCurTemperature %.01fC\r\n", usCPM, stServerData.fDose, stServerData.fIntTemperatur);      
       DP_GSM("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
-      DPS("D_WAITING FOR SECOND CHANGE\r\n");
+      DP_GSM("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
       if(stServerData.fDose > 75) {
         BUZ_ON;
         osDelay(SLEEP_MS_10000);

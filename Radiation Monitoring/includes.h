@@ -81,7 +81,7 @@
 //**************//
 
 /* DEBUG */
-#include "debug.h"
+#include "radmon_general.h"
 //**************//
 
 /* RTC */
@@ -136,6 +136,10 @@ GLOBAL char g_asCmdBuf[SIZE_IN_DATA_BUF];                      //Буфер для работ
 /* ESP8266 */
 #include "esp8266.h"
 #include "http_general.h"
+
+/* COMMANDS */
+#include "cmd_parser.h"
+#include "cmd_func.h"
 
 
 #define DBG_RX_BUFFER_SIZE 64

@@ -1,5 +1,5 @@
-#ifndef DEBUG_H_
-#define DEBUG_H_
+#ifndef RADMON_H_
+#define RADMON_H_
 
 #include "includes.h"
 
@@ -17,7 +17,7 @@ void DPC(char Data_Usart);
 void DS_GSM(const char *msg, const char *pData_Usart);
 void GSM_DPD(char *pData_Usart, uint16_t Len);
 
-void vDebugTask (void *pvParameters);
+void vRadMonTask (void *pvParameters);
 void vOnewireTask (void *pvParameters);
 
 #endif
