@@ -139,10 +139,10 @@ GLOBAL char g_asCmdBuf[SIZE_IN_DATA_BUF];                      //Буфер для работ
 
 
 #define DBG_RX_BUFFER_SIZE 64
-#define DBG_TX_BUFFER_SIZE 1536
+#define DBG_TX_BUFFER_SIZE 1280
 //#define GSM_RX_BUFFER_SIZE 1800  //675
 //#define GSM_TX_BUFFER_SIZE 350
-#define ESP_RX_BUFFER_SIZE 1536
+#define ESP_RX_BUFFER_SIZE 1280
 #define ESP_TX_BUFFER_SIZE 1280
 
 #define GPS_RX_BUFFER_SIZE 1  //150

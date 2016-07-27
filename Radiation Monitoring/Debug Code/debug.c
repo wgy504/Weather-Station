@@ -28,6 +28,7 @@ uint16_t GetCPM(void);
 void ClearCPM(void);
 
 #define TIME_SEND_DATA_SERVER   600
+#define TIME_WTDG_REBOOT        599
 
 uint16_t g_usCPM = 0;
 uint16_t ga_usDoseValue[256];
@@ -52,17 +53,22 @@ void vDebugTask (void *pvParameters)
   TServer_Data stServerData;
   stServerData.fDose = 0;
   stServerData.fIntTemperatur = 0;
+  stServerData.iCPM_Day = 0;
+  stServerData.fDoseDay = 0;
   float fIndTempValue;
+  int iCountMeasDebug = TIME_WTDG_REBOOT;
   
   osDelay(SLEEP_MS_300);
   BUZ_OFF;
   ClearCPM();
   
-  DPS("WAITING FOR FIRST CHANGE\r\n");
+  DPS("D_WAITING FOR FIRST CHANGE\r\n");
   
-  for(uint8_t i=0; i<59; i++) {
+  for(int i=59; i > 0; i--) {
+    IWDG_ReloadCounter();
     xLastWakeTimerDelay = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTimerDelay, (SLEEP_MS_1000 / portTICK_RATE_MS));
+    DP_GSM(" %i\r\n", i);
   }
   if(xQueueServDataOW != NULL) {
      xQueueReceive(xQueueServDataOW,  &fIndTempValue, (portTickType) 0);
@@ -92,6 +98,7 @@ void vDebugTask (void *pvParameters)
       dCPM_Day += usCPM;
       ucMeanCounter++;
       usMeanCounterDay++;
+      iCountMeasDebug = TIME_WTDG_REBOOT;
       if(usMeanCounterDay > sizeof(ga_usDoseValueDay)) {
          for(uint16_t i=0; i<usMeanCounterDay; i++) {
             dDose_Day += ga_usDoseValueDay[i];
@@ -106,8 +113,10 @@ void vDebugTask (void *pvParameters)
       
       DP_GSM("\r\nD_CUR DATA:\r\nCurCPM %i\r\nCurDose %.00fmR\r\nCurTemperature %.01fC\r\n", usCPM, stServerData.fDose, stServerData.fIntTemperatur);      
       DP_GSM("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
+      DPS("D_WAITING FOR SECOND CHANGE\r\n");
       if(stServerData.fDose > 75) {
         BUZ_ON;
+        osDelay(SLEEP_MS_10000);
       }
       else {
         BUZ_OFF;
@@ -131,7 +140,7 @@ void vDebugTask (void *pvParameters)
           stServerData.iCPM = (int)uiMeanValueCPM;
           DP_GSM("\r\nD_MEAN DATA:\r\nMeanCPM %i\r\nMeanDose %.00fmR\r\nCurTemperature %.01fC\r\n\r\n", uiMeanValueCPM, stServerData.fDose, stServerData.fIntTemperatur);
           xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
-          if(stServerData.iCPM_Day && stServerData.fDoseDay) {
+          if((stServerData.iCPM_Day) && (stServerData.fDoseDay)) {
              DP_GSM("\r\nD_DAY DATA:\r\nDayCPM %i\r\nDayDose %.00fmR\r\n\r\n", stServerData.iCPM_Day, stServerData.fDoseDay);
              stServerData.iCPM_Day = 0;
              stServerData.fDoseDay = 0;
@@ -152,6 +161,18 @@ void vDebugTask (void *pvParameters)
     xLastWakeTimerDelay = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTimerDelay, (SLEEP_MS_100 / portTICK_RATE_MS));
     LED_OFF;
+    iCountMeasDebug--;
+    //DP_GSM(" %i\r\n", iCountMeasDebug);
+    if(iCountMeasDebug < -100) { //—читаем что повис процесс вычислени€.
+      DPS("\r\n-D_DEVICE REBOOT-\r\n");
+      IWDG_ReloadCounter();
+      vTaskSuspendAll();           //Stop All Task
+      vTaskEndScheduler();         //Stop OS
+      __disable_interrupt();
+      while(1);
+    }
+    
+    IWDG_ReloadCounter();          // Reload IWDG counter.
   }
   
 }

@@ -48,6 +48,6 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName ) { fo
 void vApplicationIdleHook( void ) {             //это и есть поток Idle с минимальным приоритетом.
   
   while(1){
-     IWDG_ReloadCounter();          // Reload IWDG counter.
+     
   }
 }
