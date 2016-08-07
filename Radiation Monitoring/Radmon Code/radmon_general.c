@@ -30,10 +30,14 @@ void ClearCPM(void);
 #define TIME_SEND_DATA_SERVER   600
 #define TIME_WTDG_REBOOT        599
 
+#define SIZE_BUF_DAY    1440
+
 uint16_t g_usCPM = 0;
 uint16_t ga_usDoseValue[256];
 uint16_t ga_usCpmValue[256];
-uint16_t ga_usDoseValueDay[1440];
+uint16_t ga_usDoseValueDay[SIZE_BUF_DAY];
+
+int g_iCountMeasDebug = TIME_WTDG_REBOOT;
 
 void vRadMonTask (void *pvParameters)
 {
@@ -42,9 +46,11 @@ void vRadMonTask (void *pvParameters)
   uint32_t uiCurSec = 0;  
   uint32_t uiTimeMeas = 0;
   uint8_t ucMeanCounter = 0;
-  uint16_t usMeanCounterDay = 0;
-  double dCPM_Day = 0;
   double dDose_Day = 0;
+  uint16_t usMeanCounterDay = 0;
+  for(uint16_t i=0; i<SIZE_BUF_DAY; i++) {
+      ga_usDoseValueDay[i] = 0;
+  }
   
   RTC_t eDate;
   memset(&eDate, 0, sizeof(&eDate));
@@ -53,10 +59,8 @@ void vRadMonTask (void *pvParameters)
   TServer_Data stServerData;
   stServerData.fDose = 0;
   stServerData.fIntTemperatur = 0;
-  stServerData.iCPM_Day = 0;
   stServerData.fDoseDay = 0;
   float fIndTempValue;
-  int iCountMeasDebug = TIME_WTDG_REBOOT;
   
   osDelay(SLEEP_MS_300);
   BUZ_OFF;
@@ -94,18 +98,15 @@ void vRadMonTask (void *pvParameters)
       ga_usCpmValue[ucMeanCounter] = usCPM;
       
       ga_usDoseValueDay[usMeanCounterDay] = (uint16_t) stServerData.fDose;
-      dCPM_Day += usCPM;
       ucMeanCounter++;
       usMeanCounterDay++;
-      iCountMeasDebug = TIME_WTDG_REBOOT;
-      if(usMeanCounterDay > sizeof(ga_usDoseValueDay)) {
-         for(uint16_t i=0; i<usMeanCounterDay; i++) {
+      g_iCountMeasDebug = TIME_WTDG_REBOOT;
+      if(usMeanCounterDay >= SIZE_BUF_DAY) {
+         for(uint16_t i=0; i<SIZE_BUF_DAY; i++) {
             dDose_Day += ga_usDoseValueDay[i];
          }
          dDose_Day /= (double)usMeanCounterDay;
          stServerData.fDoseDay = dDose_Day;
-         stServerData.iCPM_Day = (int)dCPM_Day;
-         dCPM_Day = 0;
          dDose_Day = 0;
          usMeanCounterDay = 0;
       }
@@ -139,9 +140,8 @@ void vRadMonTask (void *pvParameters)
           stServerData.iCPM = (int)uiMeanValueCPM;
           DP_GSM("\r\nD_MEAN DATA:\r\nMeanCPM %i\r\nMeanDose %.00fmR\r\nCurTemperature %.01fC\r\n\r\n", uiMeanValueCPM, stServerData.fDose, stServerData.fIntTemperatur);
           xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
-          if((stServerData.iCPM_Day) && (stServerData.fDoseDay)) {
-             DP_GSM("\r\nD_DAY DATA:\r\nDayCPM %i\r\nDayDose %.00fmR\r\n\r\n", stServerData.iCPM_Day, stServerData.fDoseDay);
-             stServerData.iCPM_Day = 0;
+          if(stServerData.fDoseDay) {
+             DP_GSM("\r\nD_DAY DATA:\r\nDayDose %.00fmR\r\n\r\n",stServerData.fDoseDay);
              stServerData.fDoseDay = 0;
           }
           uiMeanValueDose = 0;
@@ -160,9 +160,9 @@ void vRadMonTask (void *pvParameters)
     xLastWakeTimerDelay = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTimerDelay, (SLEEP_MS_100 / portTICK_RATE_MS));
     LED_OFF;
-    iCountMeasDebug--;
-    //DP_GSM(" %i\r\n", iCountMeasDebug);
-    if(iCountMeasDebug < -100) { //—читаем что повис процесс вычислени€.
+    g_iCountMeasDebug--;
+    //DP_GSM(" %i\r\n", g_iCountMeasDebug);
+    if(g_iCountMeasDebug < -100) { //—читаем что повис процесс вычислени€.
       DPS("\r\n-D_DEVICE REBOOT-\r\n");
       IWDG_ReloadCounter();
       vTaskSuspendAll();           //Stop All Task

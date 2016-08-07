@@ -64,6 +64,8 @@ void vWifiEspTask (void *pvParameters)
   int iNumConnect = 0;
   int iLen;
   TServer_Data stServerData;
+  TServer_Data stServerDataForSend;
+  memset(&stServerDataForSend, 0, sizeof(stServerDataForSend));
   
   int iRet;
   uint8_t ucSendDataServerFail = 0;             //На какой сервер неполучилось отправить данные. Используется, что бы переслать данные
@@ -95,6 +97,15 @@ void vWifiEspTask (void *pvParameters)
    /* Обработка WEB клиента на два сервера */
     if( (xQueueReceive(xQueueServerData,  &stServerData, (portTickType) 1000)) && (xQueueServerData != 0) ) {  
       iNumConnect = 2;
+      stServerDataForSend.fDose = stServerData.fDose;
+      stServerDataForSend.iCPM = stServerData.iCPM;
+      stServerDataForSend.fIntTemperatur = stServerData.fIntTemperatur;
+      stServerDataForSend.stTimeRecords = stServerData.stTimeRecords;
+      
+      if(stServerData.fDoseDay) {
+        stServerDataForSend.fDoseDay = stServerData.fDoseDay;
+      }
+      
       _Bool fResetErr = 0;
       
       //Настройка первой конфигурации
@@ -105,9 +116,9 @@ void vWifiEspTask (void *pvParameters)
         
         InitEspSTA(aucTxBufferESP, sizeof(aucTxBufferESP), &stEspNetConfig);
         
-        iRet = SendDataArchiveFirstServer(iNumConnect, aucTxBufferESP, iLen, &stEspNetConfig, &stServerData);
+        iRet = SendDataArchiveFirstServer(iNumConnect, aucTxBufferESP, iLen, &stEspNetConfig, &stServerDataForSend);
         if( (iRet != RET_SEND_OK) && (iRet != RET_OK) ) {
-          xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);  //Если не получилось отправить сообщение, заново поставим его в очередь.
+          xQueueSendToFront(xQueueServerData, &stServerDataForSend, (portTickType) 1000);  //Если не получилось отправить сообщение, заново поставим его в очередь.
           ucSendDataServerFail = 1;
           ucMaxErrSendDataFirstServ++;
         }
@@ -133,13 +144,14 @@ void vWifiEspTask (void *pvParameters)
         
         InitEspSTA(aucTxBufferESP, sizeof(aucTxBufferESP), &stEspNetConfig);
         
-        iRet = SendDataArchiveSecondServer(iNumConnect, aucTxBufferESP, iLen, &stEspNetConfig, &stServerData);
+        iRet = SendDataArchiveSecondServer(iNumConnect, aucTxBufferESP, iLen, &stEspNetConfig, &stServerDataForSend);
         if( (iRet != RET_SEND_OK) && (iRet != RET_OK) ) {
-          xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);  //Если не получилось отправить сообщение, заново поставим его в очередь.
+          xQueueSendToFront(xQueueServerData, &stServerDataForSend, (portTickType) 1000);  //Если не получилось отправить сообщение, заново поставим его в очередь.
           ucSendDataServerFail = 2;
           ucMaxErrSendDataSecondServ++;
         }
         else {
+          stServerDataForSend.fDoseDay = 0;
           fResetErr = 1;        //Сбросили ошибку
           ucMaxErrSendDataSecondServ = 0;
         }
@@ -152,11 +164,12 @@ void vWifiEspTask (void *pvParameters)
          (ucMaxErrSendDataFirstServ >= MAX_ERR_SEND_FIRST_SERVER) || (ucMaxErrSendDataSecondServ >= MAX_ERR_SEND_SECOND_SERVER) )  
       {       //Если имелись ошибки передачи.
         if(ucSendDataServerFail == 1) {
-          xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);  //Если не получилось отправить сообщение, заново поставим его в очередь.
+          xQueueSendToFront(xQueueServerData, &stServerDataForSend, (portTickType) 1000);  //Если не получилось отправить сообщение, заново поставим его в очередь.
           ucSendDataServerFail = 2;                                                        // и отправим на второй сервер.     
         }
         else {
           xQueueReceive(xQueueServerData,  &stServerData, (portTickType) 0);
+          stServerDataForSend.fDoseDay = stServerData.fDoseDay;
           ucSendDataServerFail = 0;
         }
         ucMaxErrSendDataFirstServ = 0;
@@ -315,7 +328,8 @@ int InitEspSTA(char *ptEspRet, uint16_t Len, TEspNetConfig *pEspNetConfig)
   sprintf(strCmd, "%s\"%s\",\"%s\"", AT_CWJAP, pEspNetConfig->srtSsid, pEspNetConfig->srtPasswd);
   memset(ptEspRet, 0, Len);
   cmd_send(strCmd, &stEspInfo, ptEspRet, Len);
-  Delay(SLEEP_MS_5000);
+  Delay(SLEEP_MS_10000);
+  
   ucTimeout = 0;
   while(ucTimeout < 10)  
   {
@@ -485,11 +499,6 @@ int SendDataArchiveSecondServer(int iProf, char *ptEspRet, uint16_t Len, TEspNet
   
   if(pServerData->fDoseDay != 0) {
     sprintf(strTempCmd, "&field4=%.00f", pServerData->fDoseDay);
-    strcat(ptEspRet, strTempCmd);
-  }
-  
-  if(pServerData->iCPM_Day !=0) {
-    sprintf(strTempCmd, "&field5=%i", pServerData->iCPM_Day);
     strcat(ptEspRet, strTempCmd);
   }
   

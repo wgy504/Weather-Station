@@ -167,7 +167,6 @@ typedef struct {
   float fIntTemperatur;
   int iCPM;
   float fDoseDay;
-  int iCPM_Day;
 } TServer_Data;
 
 typedef  struct {
