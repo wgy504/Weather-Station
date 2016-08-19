@@ -1,48 +1,48 @@
-"F:\ARM\Weather Station\Meteostation\StdPeriphLib\src\stm32f10x_exti.c"
+"C:\Home Project\Weather-Station\Meteostation\StdPeriphLib\src\stm32f10x_exti.c"
 -std=c99
 -ferror-limit=100
 -I
-F:\ARM\Weather Station\Meteostation
+C:\Home Project\Weather-Station\Meteostation
 -I
-F:\ARM\Weather Station\Meteostation\Device Code
+C:\Home Project\Weather-Station\Meteostation\Device Code
 -I
-F:\ARM\Weather Station\Meteostation\StdPeriphLib\inc
+C:\Home Project\Weather-Station\Meteostation\StdPeriphLib\inc
 -I
-F:\ARM\Weather Station\Meteostation\FreeRTOS\include
+C:\Home Project\Weather-Station\Meteostation\FreeRTOS\include
 -I
-F:\ARM\Weather Station\Meteostation\FreeRTOS
+C:\Home Project\Weather-Station\Meteostation\FreeRTOS
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code
+C:\Home Project\Weather-Station\Meteostation\Driver Code
 -I
-F:\ARM\Weather Station\Meteostation\USB Code
+C:\Home Project\Weather-Station\Meteostation\USB Code
 -I
-F:\ARM\Weather Station\Meteostation\STM32_USB-FS-Device_Driver\inc
+C:\Home Project\Weather-Station\Meteostation\STM32_USB-FS-Device_Driver\inc
 -I
-F:\ARM\Weather Station\Meteostation\LCD
+C:\Home Project\Weather-Station\Meteostation\LCD
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\onewire
+C:\Home Project\Weather-Station\Meteostation\Driver Code\onewire
 -I
-F:\ARM\Weather Station\Meteostation\SDCard
+C:\Home Project\Weather-Station\Meteostation\SDCard
 -I
-F:\ARM\Weather Station\Meteostation\fatfs
+C:\Home Project\Weather-Station\Meteostation\fatfs
 -I
-F:\ARM\Weather Station\Meteostation\fatfs\option
+C:\Home Project\Weather-Station\Meteostation\fatfs\option
 -I
-F:\ARM\Weather Station\Meteostation\Debug Code
+C:\Home Project\Weather-Station\Meteostation\Debug Code
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\pressure
+C:\Home Project\Weather-Station\Meteostation\Driver Code\pressure
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\ADC
+C:\Home Project\Weather-Station\Meteostation\Driver Code\ADC
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\DHT
+C:\Home Project\Weather-Station\Meteostation\Driver Code\DHT
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\RTC
+C:\Home Project\Weather-Station\Meteostation\Driver Code\RTC
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\USART
+C:\Home Project\Weather-Station\Meteostation\Driver Code\USART
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\ENC28J60
+C:\Home Project\Weather-Station\Meteostation\Driver Code\ENC28J60
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\ENC28J60\uIP
+C:\Home Project\Weather-Station\Meteostation\Driver Code\ENC28J60\uIP
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\arm\CMSIS\Include
 -I
@@ -50,47 +50,47 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\arm\inc\c
 -I
-F:\ARM\Weather Station\Meteostation
+C:\Home Project\Weather-Station\Meteostation
 -I
-F:\ARM\Weather Station\Meteostation\Device Code
+C:\Home Project\Weather-Station\Meteostation\Device Code
 -I
-F:\ARM\Weather Station\Meteostation\StdPeriphLib\inc
+C:\Home Project\Weather-Station\Meteostation\StdPeriphLib\inc
 -I
-F:\ARM\Weather Station\Meteostation\FreeRTOS\include
+C:\Home Project\Weather-Station\Meteostation\FreeRTOS\include
 -I
-F:\ARM\Weather Station\Meteostation\FreeRTOS
+C:\Home Project\Weather-Station\Meteostation\FreeRTOS
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code
+C:\Home Project\Weather-Station\Meteostation\Driver Code
 -I
-F:\ARM\Weather Station\Meteostation\USB Code
+C:\Home Project\Weather-Station\Meteostation\USB Code
 -I
-F:\ARM\Weather Station\Meteostation\STM32_USB-FS-Device_Driver\inc
+C:\Home Project\Weather-Station\Meteostation\STM32_USB-FS-Device_Driver\inc
 -I
-F:\ARM\Weather Station\Meteostation\LCD
+C:\Home Project\Weather-Station\Meteostation\LCD
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\onewire
+C:\Home Project\Weather-Station\Meteostation\Driver Code\onewire
 -I
-F:\ARM\Weather Station\Meteostation\SDCard
+C:\Home Project\Weather-Station\Meteostation\SDCard
 -I
-F:\ARM\Weather Station\Meteostation\fatfs
+C:\Home Project\Weather-Station\Meteostation\fatfs
 -I
-F:\ARM\Weather Station\Meteostation\fatfs\option
+C:\Home Project\Weather-Station\Meteostation\fatfs\option
 -I
-F:\ARM\Weather Station\Meteostation\Debug Code
+C:\Home Project\Weather-Station\Meteostation\Debug Code
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\pressure
+C:\Home Project\Weather-Station\Meteostation\Driver Code\pressure
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\ADC
+C:\Home Project\Weather-Station\Meteostation\Driver Code\ADC
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\DHT
+C:\Home Project\Weather-Station\Meteostation\Driver Code\DHT
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\RTC
+C:\Home Project\Weather-Station\Meteostation\Driver Code\RTC
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\USART
+C:\Home Project\Weather-Station\Meteostation\Driver Code\USART
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\ENC28J60
+C:\Home Project\Weather-Station\Meteostation\Driver Code\ENC28J60
 -I
-F:\ARM\Weather Station\Meteostation\Driver Code\ENC28J60\uIP
+C:\Home Project\Weather-Station\Meteostation\Driver Code\ENC28J60\uIP
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\arm\CMSIS\Include
 -DSTM32F10X_MD=1
