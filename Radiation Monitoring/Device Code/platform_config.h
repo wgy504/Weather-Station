@@ -69,8 +69,6 @@
  #define CONVERSION_FACTOR      (double) 0.00812 * 98
 #endif
 
-#define TIME_MEAS_RADIATION     60
-
 
 /* ---- GSM ---- */
 #define GSM_MODULE_SIM800

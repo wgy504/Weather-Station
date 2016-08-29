@@ -19,7 +19,7 @@ int main()
 
   InitIWDG();    // Init Watch Dog 
   InitBKP();
-  rtc_init();
+  //rtc_init();
 
   /* Configure PA.00 in interrupt mode */
   EXTI0_Config();
