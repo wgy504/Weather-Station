@@ -41,7 +41,7 @@ void vRadMonTask (void *pvParameters)
 {
   BUZ_ON;
   uint16_t usBackCMP = 0;
-  uint32_t uiTimeMeas = TIME_MEAS_RADIATION;
+  uint32_t uiTimeMeas = 0;
   uint8_t ucMeanCounter = 0;
   double dDose_Day = 0;
   uint16_t usMeanCounterDay = 0;
@@ -60,7 +60,7 @@ void vRadMonTask (void *pvParameters)
   osDelay(SLEEP_MS_300);
   BUZ_OFF;
   ClearCPM();
-  /*
+
   DP_GSM("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
   for(int i=59; i > 0; i--) {
     IWDG_ReloadCounter();
@@ -71,7 +71,7 @@ void vRadMonTask (void *pvParameters)
   if(xQueueServDataOW != NULL) {
      xQueueReceive(xQueueServDataOW,  &fIndTempValue, (portTickType) 0);
   }
-*/
+
   while(1)
   {
     if(xQueueServDataOW != NULL) {
