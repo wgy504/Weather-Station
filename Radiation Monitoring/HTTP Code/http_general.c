@@ -171,11 +171,14 @@ void vWifiEspTask (void *pvParameters)
           xQueueReceive(xQueueServerData,  &stServerData, (portTickType) 0);
           stServerDataForSend.fDoseDay = stServerData.fDoseDay;
           ucSendDataServerFail = 0;
+          DPS("\r\nD_ESP CP PD OFF\r\n");
+          ESP_CP_PD_OFF;
         }
         ucMaxErrSendDataFirstServ = 0;
         ucMaxErrSendDataSecondServ = 0;
       }
-      
+      DPS("\r\nD_ESP CP PD OFF\r\n");
+      ESP_CP_PD_OFF;
       iNumConnect = 0;
     } 
   }
@@ -310,6 +313,10 @@ int InitEspSTA(char *ptEspRet, uint16_t Len, TEspNetConfig *pEspNetConfig)
   ESP_INFO stEspInfo;    
   memset(&stEspInfo, 0, sizeof(stEspInfo));
   char strCmd[64];
+  
+  DPS("\r\nD_ESP CP PD ON\r\n");
+  ESP_CP_PD_ON;
+  Delay(SLEEP_MS_10000);
     
   cmd_send(AT_RST, &stEspInfo, ptEspRet, Len);
   Delay(SLEEP_MS_3000);

@@ -22,6 +22,14 @@
 #define PORT_BUZ                 GPIOB
 #define PORT_BUZ_CLK             RCC_APB2Periph_GPIOB
 
+
+#define PORT_ESP_PWR_CLK        RCC_APB2Periph_GPIOB
+#define ESP_PWR_PIN             GPIO_Pin_3
+#define ESP_PWR_PORT            GPIOB
+
+#define ESP_PWR_ON              GPIO_HIGH(ESP_PWR_PORT, ESP_PWR_PIN)
+#define ESP_PWR_OFF             GPIO_LOW(ESP_PWR_PORT, ESP_PWR_PIN)
+
 /*
 // GSM REFERENCE
 #define GSM_REF_PIN                     GPIO_Pin_0
@@ -44,6 +52,9 @@
 
 #define ESP_CP_PD_PIN                GPIO_Pin_4
 #define ESP_CP_PD_PORT               GPIOA
+
+#define ESP_CP_PD_ON              GPIO_HIGH(ESP_CP_PD_PORT, ESP_CP_PD_PIN)
+#define ESP_CP_PD_OFF             GPIO_LOW(ESP_CP_PD_PORT, ESP_CP_PD_PIN)
 
 
 #define DRF_EN_PIN                GPIO_Pin_11

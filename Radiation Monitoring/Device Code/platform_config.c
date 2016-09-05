@@ -30,12 +30,22 @@ void InitGPIO(void)
   GPIO_Init(PORT_BUZ, &GPIO_InitStructure);
   BUZ_OFF;
   
+  /*
+  // Init Power ESP
+  RCC_APB2PeriphClockCmd(PORT_ESP_PWR_CLK, ENABLE);
+  GPIO_InitStructure.GPIO_Pin = ESP_PWR_PIN;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(ESP_PWR_PORT, &GPIO_InitStructure);
+  ESP_PWR_ON;
+  */
+  
   /* WIFI ESP */
   GPIO_InitStructure.GPIO_Pin = ESP_CP_PD_PIN;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(ESP_CP_PD_PORT, &GPIO_InitStructure);
-  GPIO_HIGH(ESP_CP_PD_PORT, ESP_CP_PD_PIN);
+  ESP_CP_PD_OFF;
   
   GPIO_InitStructure.GPIO_Pin = ESP_RST_PIN;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
