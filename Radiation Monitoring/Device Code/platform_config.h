@@ -112,8 +112,8 @@
 
 /// ----- NUM UART ---- ///   
 //#define UART_GSM           2 
-#define UART_ESP           2
-#define UART_DBG           1  
+#define UART_ESP             2
+#define UART_DBG             1  
 //#define UART_GPS           3   
 //**********************//
 

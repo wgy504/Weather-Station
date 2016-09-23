@@ -108,6 +108,8 @@ void vWifiEspTask (void *pvParameters)
       
       _Bool fResetErr = 0;
       
+      
+#if 0
       //Настройка первой конфигурации
       if(ucSendDataServerFail != 2)
       {
@@ -134,6 +136,7 @@ void vWifiEspTask (void *pvParameters)
       if(!(ucSendDataServerFail)) {
         fResetErr = 0;
       }
+#endif
       
       //Настройка второй конфигурации
       if(ucSendDataServerFail != 1)
