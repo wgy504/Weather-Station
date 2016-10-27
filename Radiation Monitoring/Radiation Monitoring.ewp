@@ -332,6 +332,7 @@
           <state>$PROJ_DIR$\DS18B20</state>
           <state>$PROJ_DIR$\Command Device Code</state>
           <state>$PROJ_DIR$\Radmon Code</state>
+          <state>$PROJ_DIR$\DRF7020D</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1077,6 +1078,15 @@
         <excluded>
           <configuration>STM32F103C8 (ROM 64, RAM20kB)</configuration>
         </excluded>
+      </file>
+    </group>
+    <group>
+      <name>RADIO</name>
+      <file>
+        <name>$PROJ_DIR$\DRF7020D\drf.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\DRF7020D\drf.h</name>
       </file>
     </group>
     <group>

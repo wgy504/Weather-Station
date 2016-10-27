@@ -1245,6 +1245,15 @@
       </file>
     </group>
     <group>
+      <name>RADIO</name>
+      <file>
+        <name>$PROJ_DIR$\DRF7020D\drf.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\DRF7020D\drf.h</name>
+      </file>
+    </group>
+    <group>
       <name>RTC</name>
       <file>
         <name>$PROJ_DIR$\RTC\calendar.c</name>
