@@ -10,12 +10,8 @@ void vHumidityTask (void *pvParameters)
    uint8_t aucHumidityData[5];
    
    // Создаём очередь
-   xQueueHumidityForDebug = xQueueCreate(sizeof(uint8_t), sizeof(THumidity_Data));
-   vQueueAddToRegistry(xQueueHumidityForDebug, "xQueueHumidityForDebug");
-   
-   // Создаём очередь
-   xQueueHumidityForLcd = xQueueCreate(sizeof(uint8_t), sizeof(THumidity_Data));
-   vQueueAddToRegistry(xQueueHumidityForLcd, "xQueueHumidityForLcd" );
+   xQueueExtHumidityForLcd = xQueueCreate(sizeof(uint8_t), sizeof(THumidity_Data));
+   vQueueAddToRegistry(xQueueExtHumidityForLcd, "xQueueExtHumidityForLcd");
           
    while(1)
    {      
@@ -44,13 +40,9 @@ void vHumidityTask (void *pvParameters)
       else {
         stHumidityData.bDataValid = 0;
       }
-
-      if(xQueueHumidityForDebug) {
-        xQueueSendToFront(xQueueHumidityForDebug, &stHumidityData, (portTickType) 0);
-      }
       
-      if(xQueueHumidityForLcd) {
-          xQueueSendToFront(xQueueHumidityForLcd, &stHumidityData, (portTickType) 0);
+      if(xQueueExtHumidityForLcd) {
+          xQueueSendToFront(xQueueExtHumidityForLcd, &stHumidityData, (portTickType) 0);
       }
       _delay_ms(500);
    }

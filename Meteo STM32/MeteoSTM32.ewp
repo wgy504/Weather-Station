@@ -89,7 +89,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>STM32F103V8	ST STM32F103V8</state>
+          <state>STM32F103C8	ST STM32F103C8</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -149,7 +149,7 @@
         </option>
         <option>
           <name>GFPUDeviceSlave</name>
-          <state>STM32F103V8	ST STM32F103V8</state>
+          <state>STM32F103C8	ST STM32F103C8</state>
         </option>
         <option>
           <name>FPU2</name>
@@ -334,6 +334,7 @@
           <state>$PROJ_DIR$\ESP8266</state>
           <state>$PROJ_DIR$\HTTP Code</state>
           <state>$PROJ_DIR$\GPS Code</state>
+          <state>$PROJ_DIR$\Button Code</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -981,12 +982,12 @@
     </settings>
   </configuration>
   <group>
-    <name>Debug Code</name>
+    <name>Button Code</name>
     <file>
-      <name>$PROJ_DIR$\Debug Code\debug.c</name>
+      <name>$PROJ_DIR$\Button Code\button_general.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\Debug Code\debug.h</name>
+      <name>$PROJ_DIR$\Button Code\button_general.h</name>
     </file>
   </group>
   <group>
@@ -1112,7 +1113,7 @@
       <name>$PROJ_DIR$\GPS Code\gps_general.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\GPS Code\gps_parser.c</name>
+      <name>$PROJ_DIR$\GPS Code\gps_parser_ver2.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\GPS Code\gps_tools.c</name>
@@ -1137,7 +1138,7 @@
     </file>
   </group>
   <group>
-    <name>LCD</name>
+    <name>LCD Code</name>
     <file>
       <name>$PROJ_DIR$\LCD\LCD.c</name>
     </file>

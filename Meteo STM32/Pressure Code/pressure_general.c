@@ -8,10 +8,7 @@ void vPressureTask (void *pvParameters)
 
   uint32_t u_temp, u_pres;      //Вспомагательные переменные "сырых" данных с датчика.
 
-  // Создаём очередь
-  xQueuePressureForDebug = xQueueCreate(sizeof(uint8_t), sizeof(stPressureData));
-  vQueueAddToRegistry(xQueuePressureForDebug, "xQueuePressureForDebug");
-  
+  // Создаём очередь  
   xQueuePressureForLcd = xQueueCreate(sizeof(uint8_t), sizeof(stPressureData));
   vQueueAddToRegistry(xQueuePressureForLcd, "xQueuePressureForLcd");
   
@@ -28,10 +25,6 @@ void vPressureTask (void *pvParameters)
     u_pres = BMP180_Read_PT(0);
     stPressureData.iRealPressurePa = BMP180_Calc_RP(u_pres,0);
     stPressureData.iRealPressureHg = BMP180_kpa_to_mmhg(stPressureData.iRealPressurePa);
-    
-    if(xQueuePressureForDebug) {
-        xQueueSendToFront(xQueuePressureForDebug, &stPressureData, (portTickType) 100);
-    }
     
     if(xQueuePressureForLcd) {
         xQueueSendToFront(xQueuePressureForLcd, &stPressureData, (portTickType) 100);

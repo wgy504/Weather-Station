@@ -9,9 +9,9 @@ xTaskHandle xHandleLcdTask;
 xTaskHandle xHandlevPressureTask;
 xTaskHandle xHandleHumidityTask;
 xTaskHandle xHandleWifiTask;
-xTaskHandle xHandleDebugTask;
 xTaskHandle xHandleWifiEspTask;
 xTaskHandle xHandleGpsTask;
+xTaskHandle xHandleButtonTask;
 
 int main()
 {
@@ -21,21 +21,12 @@ int main()
   InitIWDG();    // Init Watch Dog 
   InitBKP();
   rtc_init();
-  
-#ifdef DEBUG_OUTPUT_USB
-  Set_System();
-  Set_USBClock();
-  USB_Interrupts_Config();
-  USB_Init();
-#endif
-  
+   
   mINIT_WIFI_ESP  = osMutexCreate(NULL);
   mSEND_DATA_SERVER = osMutexCreate(NULL);
-  mINIT_GPS_MODULE      = osMutexCreate(NULL);
   mGPS_DATA_ARRIVAL     = osMutexCreate(NULL);
   xSemaphoreTake(mINIT_WIFI_ESP, SLEEP_MS_100);
   xSemaphoreTake(mSEND_DATA_SERVER, SLEEP_MS_100);
-  xSemaphoreTake(mINIT_GPS_MODULE, SLEEP_MS_100);
   xSemaphoreTake(mGPS_DATA_ARRIVAL, SLEEP_MS_100);
   
   // Start Task //
@@ -43,8 +34,8 @@ int main()
   xTaskCreate(vPressureTask, "vPressureTask", configMINIMAL_STACK_SIZE * 1, NULL, tskIDLE_PRIORITY + 1, &xHandlevPressureTask);
   xTaskCreate(vHumidityTask, "vHumidityTask", configMINIMAL_STACK_SIZE * 2, NULL, tskIDLE_PRIORITY + 1, &xHandleHumidityTask);
   xTaskCreate(vWifiEspTask, "vWifiEspTask", configMINIMAL_STACK_SIZE * 4, NULL, tskIDLE_PRIORITY + 1, &xHandleWifiTask);
-  xTaskCreate(vDebugTask, "vDebugTask", configMINIMAL_STACK_SIZE * 2, NULL, tskIDLE_PRIORITY + 1, &xHandleDebugTask);
   xTaskCreate(vGpsHandler, "vGpsHandler", configMINIMAL_STACK_SIZE * 2, NULL, tskIDLE_PRIORITY + 1, &xHandleGpsTask);
+  xTaskCreate(vButtonTask, "vButtonTask", configMINIMAL_STACK_SIZE * 1, NULL, tskIDLE_PRIORITY + 1, &xHandleButtonTask);
   
   // Start scheduler //
   osKernelStart(NULL, NULL);

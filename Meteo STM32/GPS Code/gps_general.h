@@ -3,7 +3,7 @@
 #define _GPS_GENERAL_H_
 
 #include "includes.h"
-#include "gps_parser.h"
+#include "gps_parser_ver2.h"
 
 // Выключение не нужных сообщений GPS приемника //
   #define GPS_GLL_DISABLE
@@ -25,7 +25,6 @@
 #define MAX_TIME_GPS_NO_MUTEX           6
 
 void vGpsHandler (void *pvParameters);
-float GetSpeedKmGps(void);
-_Bool GetGpsStatus(void);
+void CpyGpsBuf (const char *pBuf, const int Len);
 
 #endif

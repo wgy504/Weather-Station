@@ -77,10 +77,6 @@
 #include "USART.h"
 //**************//
 
-/* DEBUG */
-#include "debug.h"
-//**************//
-
 /* USB */
 #include "usb_lib.h"
 #include "usb_prop.h"
@@ -116,8 +112,11 @@
 
 /* GPS Code */
 #include "gps_general.h"
-#include "gps_parser.h"
+#include "gps_parser_ver2.h"
 #include "gps_tools.h"
+
+/* BUTTON Code */
+#include "button_general.h"
 
 typedef  struct{
     uint16_t usRealHumidity;    //
@@ -146,7 +145,7 @@ typedef struct {
 } TServer_Data;
 
 /* GPS */
-#define GPS_RX_BUFFER_SIZE 200  //150
+#define GPS_RX_BUFFER_SIZE 1  //150
 #define GPS_TX_BUFFER_SIZE 64   //64
 
 
@@ -159,11 +158,8 @@ GLOBAL uint8_t g_aucTxBufferUSART2[TX_BUFFER_SIZE2];
 GLOBAL uint8_t g_aucTxBufferUSART3[TX_BUFFER_SIZE3]; 
 
 GLOBAL xQueueHandle xQueueServerData                    _EQU(NULL);             // Очередь данных внешнему серверу(например thingspeak.com)
-GLOBAL xQueueHandle xQueueHumidityForDebug              _EQU(NULL);             // Очередь данных о влажности.
-GLOBAL xQueueHandle xQueuePressureForDebug              _EQU(NULL);             // Очередь данных о давлении.
-GLOBAL xQueueHandle xQueueGpsForDebug                   _EQU(NULL);             // Очередь данных
-
-GLOBAL xQueueHandle xQueueHumidityForLcd                _EQU(NULL);             // Очередь данных о влажности.
+GLOBAL xQueueHandle xQueueExtHumidityForLcd             _EQU(NULL);             // Очередь данных о влажности.
+GLOBAL xQueueHandle xQueueIntHumidityForLcd             _EQU(NULL);             // Очередь данных о влажности.
 GLOBAL xQueueHandle xQueuePressureForLcd                _EQU(NULL);             // Очередь данных о давлении.
 
 //**********************//
@@ -171,7 +167,6 @@ GLOBAL xQueueHandle xQueuePressureForLcd                _EQU(NULL);             
 /* Mutex Initialization */
 GLOBAL xSemaphoreHandle mINIT_WIFI_ESP          _EQU(NULL);
 GLOBAL xSemaphoreHandle mSEND_DATA_SERVER       _EQU(NULL);
-GLOBAL xSemaphoreHandle mINIT_GPS_MODULE        _EQU(NULL);
 
 GLOBAL xSemaphoreHandle mGPS_DATA_ARRIVAL       _EQU(NULL);
 

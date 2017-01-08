@@ -41,32 +41,16 @@
 #define GET_BUT1     (!(GPIO_ReadInputDataBit(PORT_BUT, BUT1)))
 #define GET_BUT2     (!(GPIO_ReadInputDataBit(PORT_BUT, BUT2)))
 #define GET_BUT3     (!(GPIO_ReadInputDataBit(PORT_BUT, BUT3)))
+#define GET_BUT4     (!(GPIO_ReadInputDataBit(GPIOB, BUT4)))
+
 
 #define LED_ON            GPIO_LOW(PORT_LED, LED);
 #define LED_OFF           GPIO_HIGH(PORT_LED, LED);
 #define LED_TOGGLE        GPIO_TOGGLE(PORT_LED, LED);
 
-//// ---- GPS ---- ////
-//#define GPS_MODULE_IT520
-#define GPS_MODULE_UBLOX
-
-#ifdef GPS_MODULE_IT520
-  #define GPS_PACKET_LEN  1
-#endif
-
-#ifdef GPS_MODULE_UBLOX
-  #define GPS_PACKET_LEN  0
-#endif
 
 //// ----- GPS BAUDRATE ---- ////
-#ifdef GPS_MODULE_IT520
-  #define GPS_BAUDRATE    115200
-#endif
-
-#ifdef GPS_MODULE_UBLOX
-  #define GPS_BAUDRATE    9600
-#endif
-
+#define GPS_BAUDRATE    9600
 #define GSM_BAUDRATE    115200
 #define DBG_BAUDRATE    19200
 //**********************//
@@ -80,7 +64,7 @@
 #define ESP_BAUDRATE            115200
 
 #define TIM3_PERIOD     1000
-GLOBAL uint16_t usTIMET1_CCR1_Val _EQU(500);
+GLOBAL int16_t sTIMET1_CCR1_Val _EQU(700);
 
 void InitGPIO(void);
 void InitBKP(void);
