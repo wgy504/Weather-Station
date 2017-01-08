@@ -11,11 +11,9 @@ xTaskHandle xHandlevRadMonTask;
 xTaskHandle xHandleWifiTask;
 xTaskHandle xHandleOnewireTask;
 
-
 int main()
-{
+{  
   InitGPIO();
-  //InitTIM3();
 
   InitIWDG();    // Init Watch Dog 
   InitBKP();
@@ -26,10 +24,10 @@ int main()
   /* Generate software interrupt: simulate a falling edge applied on EXTI0 line */
   //EXTI_GenerateSWInterrupt(EXTI_Line0);
   
-  InitUSART(UART_DBG, DBG_BAUDRATE);
-  InitDMA(UART_DBG);
+  InitGpioDRF();
+  InitUSART(UART_DRF, DRF_BAUDRATE);
+  InitDMA(UART_DRF);
   
-  DPS("\r\n-=D_RUN APPL=-\r\n");
   // Start Task //
   xTaskCreate(vRadMonTask, "vRadMonTask", configMINIMAL_STACK_SIZE * 4, NULL, tskIDLE_PRIORITY + 3, &xHandlevRadMonTask);
   xTaskCreate(vWifiEspTask, "vWifiEspTask", configMINIMAL_STACK_SIZE * 6, NULL, tskIDLE_PRIORITY + 2, &xHandleWifiTask);

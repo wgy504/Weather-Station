@@ -94,7 +94,7 @@ void vWifiEspTask (void *pvParameters)
   while(1)
   {
 
-   /* Обработка WEB клиента на два сервера */
+    /* Обработка WEB клиента на два сервера */
     if( (xQueueReceive(xQueueServerData,  &stServerData, (portTickType) 1000)) && (xQueueServerData != 0) ) { 
       _Bool fResetErr = 0;
       DRF_DISABLE;
@@ -152,7 +152,6 @@ void vWifiEspTask (void *pvParameters)
           ucMaxErrSendDataSecondServ++;
         }
         else {
-          stServerDataForSend.fDoseDay = 0;
           fResetErr = 1;        //Сбросили ошибку
           ucMaxErrSendDataSecondServ = 0;
         }
@@ -170,7 +169,6 @@ void vWifiEspTask (void *pvParameters)
         }
         else {
           xQueueReceive(xQueueServerData,  &stServerData, (portTickType) 0);
-          stServerDataForSend.fDoseDay = stServerData.fDoseDay;
           ucSendDataServerFail = 0;
           DPS("\r\nD_ESP CP PD OFF\r\n");
           ESP_CP_PD_OFF;
@@ -182,9 +180,6 @@ void vWifiEspTask (void *pvParameters)
       ESP_CP_PD_OFF;
       iNumConnect = 0;
     } 
-    else {
-      DRF_ENABLE;
-    }
   }
 }
 
@@ -431,6 +426,7 @@ int SendDataArchiveFirstServer(int iProf, char *ptEspRet, uint16_t Len, TEspNetC
 
   
   if(!(strstr(strTempCmd, ">") > 0)) {
+    return ERR_SEND_DATA;
     //return ERR_SEND_DATA;
   }
    
@@ -505,11 +501,6 @@ int SendDataArchiveSecondServer(int iProf, char *ptEspRet, uint16_t Len, TEspNet
   
   if(pServerData->iCPM != 0) {
     sprintf(strTempCmd, "&field3=%i", pServerData->iCPM);
-    strcat(ptEspRet, strTempCmd);
-  }
-  
-  if(pServerData->fDoseDay != 0) {
-    sprintf(strTempCmd, "&field4=%.00f", pServerData->fDoseDay);
     strcat(ptEspRet, strTempCmd);
   }
   

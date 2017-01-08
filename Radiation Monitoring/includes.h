@@ -89,15 +89,13 @@
 #include "calendar.h"
 /**************/
 
-/* LCD */
-//#include "LCD.h"
-//#include "lcd_general.h"
+/* Radio */
+#include "drf.h"
 /***********/
 
 /* ONEWIRE */
 #include "DS18B20.h"
 /***********/
-
 
 #define RX_BUFFER_SIZE              600         //300
 #define SIZE_IN_DATA_BUF            500         //200
@@ -166,7 +164,6 @@ typedef struct {
   float fDose;
   float fIntTemperatur;
   int iCPM;
-  float fDoseDay;
 } TServer_Data;
 
 typedef  struct {

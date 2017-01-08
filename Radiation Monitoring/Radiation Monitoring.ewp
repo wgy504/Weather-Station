@@ -332,6 +332,7 @@
           <state>$PROJ_DIR$\DS18B20</state>
           <state>$PROJ_DIR$\Command Device Code</state>
           <state>$PROJ_DIR$\Radmon Code</state>
+          <state>$PROJ_DIR$\DRF7020D</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1044,6 +1045,54 @@
       </file>
     </group>
     <group>
+<<<<<<< HEAD
+=======
+      <name>GSM</name>
+      <excluded>
+        <configuration>STM32F103C8 (ROM 64, RAM20kB)</configuration>
+      </excluded>
+      <file>
+        <name>$PROJ_DIR$\GSM Code\gsm_check.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\GSM Code\gsm_gprs.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\GSM Code\gsm_hw.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\GSM Code\gsm_info.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\GSM Code\gsm_mc52iT.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\GSM Code\gsm_parser.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\GSM Code\gsm_sms.c</name>
+        <excluded>
+          <configuration>STM32F103C8 (ROM 64, RAM20kB)</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\GSM Code\sms_cmd.c</name>
+        <excluded>
+          <configuration>STM32F103C8 (ROM 64, RAM20kB)</configuration>
+        </excluded>
+      </file>
+    </group>
+    <group>
+      <name>RADIO</name>
+      <file>
+        <name>$PROJ_DIR$\DRF7020D\drf.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\DRF7020D\drf.h</name>
+      </file>
+    </group>
+    <group>
+>>>>>>> 280e39629db1711e5709af53734008bbf5f9ecde
       <name>RTC</name>
       <file>
         <name>$PROJ_DIR$\RTC\calendar.c</name>

@@ -30,38 +30,77 @@ void ClearCPM(void);
 #define TIME_SEND_DATA_SERVER   6000
 #define TIME_MEAS_RADIATION     600
 
-#define SIZE_BUF_DAY    1440
 
 uint16_t g_usCPM = 0;
 uint16_t ga_usDoseValue[256];
 uint16_t ga_usCpmValue[256];
-uint16_t ga_usDoseValueDay[SIZE_BUF_DAY];
+
+TDrf_Settings g_stDrfSettings;
 
 void vRadMonTask (void *pvParameters)
 {
+<<<<<<< HEAD
   //BUZ_ON;
+=======
+  TDrf_Settings stDrfSettings;
+  //Инит структуры конфигурации радиомодема
+  stDrfSettings.uiFreq = 454130;
+  stDrfSettings.eDRfsk = DRfsk_9600bps;
+  stDrfSettings.ecPout = Pout_20dBm;
+  stDrfSettings.eDRin =  DRin_9600bps;
+  stDrfSettings.eParity = NO_PARITY;
+  
+  _Bool bInitConfigDrf = 0;
+  osDelay(SLEEP_MS_200);
+  
+  /* Читаем конфиг радиомодема */
+  if(GetConfigDRF(&g_stDrfSettings, DRF_BAUDRATE)) {
+     bInitConfigDrf = 1;
+  }
+  else {
+    /* Сравниваем конфиг радиомодема с заданным */
+    uint8_t *ptr1 = (uint8_t*)&stDrfSettings;
+    uint8_t *ptr2 = (uint8_t*)&g_stDrfSettings;
+    for(int i=0; i<sizeof(TDrf_Settings); i++) {
+       if(ptr1[i] != ptr2[i]) {
+          bInitConfigDrf = 1;
+          break;
+       }
+    }
+  }
+  
+  /* Устанавливаем заданный конфиг если нужно */
+  if(bInitConfigDrf) {
+     if(!(SetConfigDRF(&stDrfSettings, DRF_BAUDRATE))) {
+        g_stDrfSettings = stDrfSettings;
+     }
+  }
+  
+  /* Включаем радио, чтобы слать данные */
+  SetRadioEnable(1);
+  
+  DPS("\r\n-=D_RUN APPL=-\r\n");
+  
+>>>>>>> 280e39629db1711e5709af53734008bbf5f9ecde
   uint16_t usBackCMP = 0;
   uint32_t uiTimeMeas = 0;
   uint8_t ucMeanCounter = 0;
-  double dDose_Day = 0;
-  uint16_t usMeanCounterDay = 0;
-  for(uint16_t i=0; i<SIZE_BUF_DAY; i++) {
-      ga_usDoseValueDay[i] = 0;
-  }
   
   portTickType xLastWakeTimerDelay;
   uint32_t uiTimeSendDataServer = TIME_SEND_DATA_SERVER;
+  
   TServer_Data stServerData;
   stServerData.fDose = 0;
   stServerData.fIntTemperatur = 0;
-  stServerData.fDoseDay = 0;
   float fIndTempValue;
   
   osDelay(SLEEP_MS_300);
-  BUZ_OFF;
   ClearCPM();
 
+<<<<<<< HEAD
   DP_DBG("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
+=======
+>>>>>>> 280e39629db1711e5709af53734008bbf5f9ecde
   for(int i=59; i > 0; i--) {
     IWDG_ReloadCounter();
     xLastWakeTimerDelay = xTaskGetTickCount();
@@ -89,23 +128,16 @@ void vRadMonTask (void *pvParameters)
       ga_usDoseValue[ucMeanCounter] = (uint16_t) stServerData.fDose;
       ga_usCpmValue[ucMeanCounter] = usCPM;
       
-      ga_usDoseValueDay[usMeanCounterDay] = (uint16_t) stServerData.fDose;
       ucMeanCounter++;
-      usMeanCounterDay++;
-
-      if(usMeanCounterDay >= SIZE_BUF_DAY) {
-         for(uint16_t i=0; i<SIZE_BUF_DAY; i++) {
-            dDose_Day += ga_usDoseValueDay[i];
-         }
-         dDose_Day /= (double)usMeanCounterDay;
-         stServerData.fDoseDay = dDose_Day;
-         dDose_Day = 0;
-         usMeanCounterDay = 0;
-      }
       
+<<<<<<< HEAD
       DP_DBG("\r\nD_CUR DATA:\r\nCurCPM %i\r\nCurDose %.00fmR\r\nCurTemperature %.01fC\r\n", usCPM, stServerData.fDose, stServerData.fIntTemperatur);      
       DP_DBG("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
       DP_DBG("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
+=======
+      DP_GSM("\r\nD_CUR DATA:\r\nCurCPM %i\r\nCurDose %.00fmR\r\nCurTemperature %.01fC\r\n", usCPM, stServerData.fDose, stServerData.fIntTemperatur);      
+      DP_GSM("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
+>>>>>>> 280e39629db1711e5709af53734008bbf5f9ecde
       if(stServerData.fDose > 75) {
         BUZ_ON;
         osDelay(SLEEP_MS_10000);
@@ -132,10 +164,13 @@ void vRadMonTask (void *pvParameters)
           stServerData.iCPM = (int)uiMeanValueCPM;
           DP_DBG("\r\nD_MEAN DATA:\r\nMeanCPM %i\r\nMeanDose %.00fmR\r\nCurTemperature %.01fC\r\n\r\n", uiMeanValueCPM, stServerData.fDose, stServerData.fIntTemperatur);
           xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
+<<<<<<< HEAD
           if(stServerData.fDoseDay) {
              DP_DBG("\r\nD_DAY DATA:\r\nDayDose %.00fmR\r\n\r\n",stServerData.fDoseDay);
              stServerData.fDoseDay = 0;
           }
+=======
+>>>>>>> 280e39629db1711e5709af53734008bbf5f9ecde
           uiMeanValueDose = 0;
           memset(ga_usDoseValue, 0, sizeof(ga_usDoseValue));
           ucMeanCounter = 0;
