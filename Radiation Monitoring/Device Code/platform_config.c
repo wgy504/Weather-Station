@@ -58,13 +58,13 @@ void InitGPIO(void)
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(DRF_EN_PORT, &GPIO_InitStructure);
-  GPIO_HIGH(DRF_EN_PORT, DRF_EN_PIN);
+  DRF_ENABLE;
   
   GPIO_InitStructure.GPIO_Pin = DRF_SET_PIN;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(DRF_SET_PORT, &GPIO_InitStructure);
-  GPIO_HIGH(DRF_SET_PORT, DRF_SET_PIN);
+  DRF_SET_DISABLE;
 }
 
 void InitTIM3(void)

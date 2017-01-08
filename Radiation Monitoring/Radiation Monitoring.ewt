@@ -1218,33 +1218,6 @@
       </file>
     </group>
     <group>
-      <name>GSM</name>
-      <file>
-        <name>$PROJ_DIR$\GSM Code\gsm_check.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\GSM Code\gsm_gprs.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\GSM Code\gsm_hw.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\GSM Code\gsm_info.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\GSM Code\gsm_mc52iT.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\GSM Code\gsm_parser.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\GSM Code\gsm_sms.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\GSM Code\sms_cmd.c</name>
-      </file>
-    </group>
-    <group>
       <name>RTC</name>
       <file>
         <name>$PROJ_DIR$\RTC\calendar.c</name>
@@ -1309,36 +1282,12 @@
     </file>
   </group>
   <group>
-    <name>GSM Code</name>
-    <file>
-      <name>$PROJ_DIR$\GSM Code\gsm_code.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\GSM Code\gsm_code.h</name>
-    </file>
-  </group>
-  <group>
     <name>HTTP Code</name>
     <file>
       <name>$PROJ_DIR$\HTTP Code\http_general.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\HTTP Code\http_general.h</name>
-    </file>
-  </group>
-  <group>
-    <name>LCD Code</name>
-    <file>
-      <name>$PROJ_DIR$\LCD\LCD.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\LCD\LCD.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\LCD\lcd_general.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\LCD\lcd_general.h</name>
     </file>
   </group>
   <group>

@@ -6,7 +6,7 @@
 #define DEBUG_OUTPUT_USART
 //#define DEBUG_OUTPUT_USB
 
-#define DP_GSM(format, ...)          debug_printf(format, ## __VA_ARGS__)
+#define DP_DBG(format, ...)          debug_printf(format, ## __VA_ARGS__)
 
 void debug_printf(const char *fmt_ptr, ...);
 void GSM_WP(const char *pCmd, const char *pPmd, char res);

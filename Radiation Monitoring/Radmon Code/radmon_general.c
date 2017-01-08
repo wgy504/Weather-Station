@@ -39,7 +39,7 @@ uint16_t ga_usDoseValueDay[SIZE_BUF_DAY];
 
 void vRadMonTask (void *pvParameters)
 {
-  BUZ_ON;
+  //BUZ_ON;
   uint16_t usBackCMP = 0;
   uint32_t uiTimeMeas = 0;
   uint8_t ucMeanCounter = 0;
@@ -61,12 +61,12 @@ void vRadMonTask (void *pvParameters)
   BUZ_OFF;
   ClearCPM();
 
-  DP_GSM("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
+  DP_DBG("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
   for(int i=59; i > 0; i--) {
     IWDG_ReloadCounter();
     xLastWakeTimerDelay = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTimerDelay, (SLEEP_MS_1000 / portTICK_RATE_MS));
-    DP_GSM(" %i\r\n", i);
+    DP_DBG(" %i\r\n", i);
   }
   if(xQueueServDataOW != NULL) {
      xQueueReceive(xQueueServDataOW,  &fIndTempValue, (portTickType) 0);
@@ -103,9 +103,9 @@ void vRadMonTask (void *pvParameters)
          usMeanCounterDay = 0;
       }
       
-      DP_GSM("\r\nD_CUR DATA:\r\nCurCPM %i\r\nCurDose %.00fmR\r\nCurTemperature %.01fC\r\n", usCPM, stServerData.fDose, stServerData.fIntTemperatur);      
-      DP_GSM("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
-      DP_GSM("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
+      DP_DBG("\r\nD_CUR DATA:\r\nCurCPM %i\r\nCurDose %.00fmR\r\nCurTemperature %.01fC\r\n", usCPM, stServerData.fDose, stServerData.fIntTemperatur);      
+      DP_DBG("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
+      DP_DBG("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
       if(stServerData.fDose > 75) {
         BUZ_ON;
         osDelay(SLEEP_MS_10000);
@@ -130,10 +130,10 @@ void vRadMonTask (void *pvParameters)
             
           stServerData.fDose = (float)uiMeanValueDose;
           stServerData.iCPM = (int)uiMeanValueCPM;
-          DP_GSM("\r\nD_MEAN DATA:\r\nMeanCPM %i\r\nMeanDose %.00fmR\r\nCurTemperature %.01fC\r\n\r\n", uiMeanValueCPM, stServerData.fDose, stServerData.fIntTemperatur);
+          DP_DBG("\r\nD_MEAN DATA:\r\nMeanCPM %i\r\nMeanDose %.00fmR\r\nCurTemperature %.01fC\r\n\r\n", uiMeanValueCPM, stServerData.fDose, stServerData.fIntTemperatur);
           xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
           if(stServerData.fDoseDay) {
-             DP_GSM("\r\nD_DAY DATA:\r\nDayDose %.00fmR\r\n\r\n",stServerData.fDoseDay);
+             DP_DBG("\r\nD_DAY DATA:\r\nDayDose %.00fmR\r\n\r\n",stServerData.fDoseDay);
              stServerData.fDoseDay = 0;
           }
           uiMeanValueDose = 0;

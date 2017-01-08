@@ -63,6 +63,13 @@
 #define DRF_SET_PIN               GPIO_Pin_12
 #define DRF_SET_PORT              GPIOA
 
+#define DRF_ENABLE              GPIO_SetBits(DRF_EN_PORT, DRF_EN_PIN);          
+#define DRF_DISABLE             GPIO_ResetBits(DRF_EN_PORT, DRF_EN_PIN);       
+
+#define DRF_SET_ENABLE          GPIO_ResetBits(DRF_SET_PORT, DRF_SET_PIN);     
+#define DRF_SET_DISABLE         GPIO_SetBits(DRF_SET_PORT, DRF_SET_PIN);        
+
+
 #define LED_ON            GPIO_LOW(PORT_LED, LED);
 #define LED_OFF           GPIO_HIGH(PORT_LED, LED);
 #define LED_TOGGLE        GPIO_TOGGLE(PORT_LED, LED);
@@ -81,41 +88,13 @@
 #endif
 
 
-/* ---- GSM ---- */
-#define GSM_MODULE_SIM800
-
-/* ---- GPS ---- */
-//#define GPS_MODULE_IT520
-#define GPS_MODULE_UBLOX
-
-#ifdef GPS_MODULE_IT520
-  #define GPS_PACKET_LEN  1
-#endif
-
-#ifdef GPS_MODULE_UBLOX
-  #define GPS_PACKET_LEN  0
-#endif
-
-//// ----- GPS BAUDRATE ---- ////
-#ifdef GPS_MODULE_IT520
-  #define GPS_BAUDRATE    115200
-#endif
-
-#ifdef GPS_MODULE_UBLOX
-  #define GPS_BAUDRATE    9600
-#endif
-
-//#define GSM_BAUDRATE    115200
 #define ESP_BAUDRATE    115200
 #define DBG_BAUDRATE    9600
 //**********************//
 
 /// ----- NUM UART ---- ///   
-//#define UART_GSM           2 
 #define UART_ESP             2
 #define UART_DBG             1  
-//#define UART_GPS           3   
-//**********************//
 
 #define TIM3_PERIOD     1000
 GLOBAL uint16_t usTIMET1_CCR1_Val _EQU(500);
