@@ -12,11 +12,10 @@ char g_aucGpsBuffOut[100];
 
 void vGpsHandler (void *pvParameters)
 {
-  GPS_INFO stGpsData;          //Структура GPS.
   memset(&stGpsData, 0, sizeof(stGpsData));
 
   uint8_t ucTimeoutMutexUartGps = 0;
-  uint8_t ucDalayGpsValid = 0;
+  uint8_t ucDalayGpsNotValid = 0;
   
   // Init UART GPS
   InitUSART(UART_GPS, GPS_BAUDRATE);
@@ -29,9 +28,9 @@ void vGpsHandler (void *pvParameters)
    {
       gps_parser(&stGpsData, g_aucGpsBuffOut, strlen(g_aucGpsBuffOut));
 
-      if(stGpsData.status)
+      if(stGpsData.time && stGpsData.latitude && stGpsData.longitude)
       {  
-        ucDalayGpsValid = 0;
+        ucDalayGpsNotValid = 0;
         RTC_t stDateTime;
         #define TIME_ZONE 3*60*60
         stGpsData.time += TIME_ZONE;
@@ -41,17 +40,13 @@ void vGpsHandler (void *pvParameters)
       }
       else
       {
-        ucDalayGpsValid++;
-        memset(&stGpsData, 0, sizeof(stGpsData));
-        
+        ucDalayGpsNotValid++;        
       }  
       
-      if(ucDalayGpsValid > DELAY_GPS_VALID) {
+      if(ucDalayGpsNotValid > DELAY_GPS_VALID) {
         LED_TOGGLE;
+        memset(&stGpsData, 0, sizeof(stGpsData));
       }
-      
-      memset(&stGpsData, 0, sizeof(stGpsData));
-      
 
       ucTimeoutMutexUartGps = 0;
     }

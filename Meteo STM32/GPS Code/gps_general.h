@@ -10,6 +10,7 @@
   #define GPS_VTG_DISABLE
   #define GPS_GSV_DISABLE
   #define GPS_GSA_DISABLE
+  #define GPS_GGA_DISABLE
 
 // Конфигурирование светодиода GPS приемника //
 //  #define LED_CONFIG_ENABLE

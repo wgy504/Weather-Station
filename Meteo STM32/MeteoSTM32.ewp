@@ -1134,6 +1134,9 @@
       <name>$PROJ_DIR$\Humidity Code\dht11.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\Humidity Code\dht22.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\Humidity Code\humidity_general.c</name>
     </file>
   </group>

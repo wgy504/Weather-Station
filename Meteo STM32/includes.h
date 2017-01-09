@@ -87,6 +87,7 @@
 
 /* DHT 11 */
 #include "dht11.h"
+#include "dht22.h"
 #include "humidity_general.h"
 //**********************//
 
@@ -155,7 +156,9 @@ GLOBAL uint8_t g_aucRxBufferUSART2[RX_BUFFER_SIZE2];
 GLOBAL uint8_t g_aucRxBufferUSART3[RX_BUFFER_SIZE3]; 
 GLOBAL uint8_t g_aucTxBufferUSART1[TX_BUFFER_SIZE1]; 
 GLOBAL uint8_t g_aucTxBufferUSART2[TX_BUFFER_SIZE2]; 
-GLOBAL uint8_t g_aucTxBufferUSART3[TX_BUFFER_SIZE3]; 
+GLOBAL uint8_t g_aucTxBufferUSART3[TX_BUFFER_SIZE3];
+
+GLOBAL GPS_INFO stGpsData;          //Структура GPS.
 
 GLOBAL xQueueHandle xQueueServerData                    _EQU(NULL);             // Очередь данных внешнему серверу(например thingspeak.com)
 GLOBAL xQueueHandle xQueueExtHumidityForLcd             _EQU(NULL);             // Очередь данных о влажности.
@@ -169,6 +172,9 @@ GLOBAL xSemaphoreHandle mINIT_WIFI_ESP          _EQU(NULL);
 GLOBAL xSemaphoreHandle mSEND_DATA_SERVER       _EQU(NULL);
 
 GLOBAL xSemaphoreHandle mGPS_DATA_ARRIVAL       _EQU(NULL);
+GLOBAL xSemaphoreHandle mLCD_LED_INDICATING     _EQU(NULL);
+GLOBAL xSemaphoreHandle mLCD_GPS_INDICATING     _EQU(NULL);
+
 
 GLOBAL  xTaskHandle CurrentTaskHandle;  //ID текущего процесса(Debug)
 GLOBAL  char *pNameCurrentTask;          //Имя текущего процесса(Debug)

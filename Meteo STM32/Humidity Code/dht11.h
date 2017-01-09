@@ -9,8 +9,8 @@
 
 /* Exported constants --------------------------------------------------------*/
 #define DHT11_PORT_CLOCK        RCC_APB2Periph_GPIOA
-#define DHT11_PORT              GPIOA
-#define DHT11_PIN               GPIO_Pin_7
+#define DHT11_PORT              GPIOB
+#define DHT11_PIN               GPIO_Pin_0
 
 #define DHT11_OK 0
 #define DHT11_NO_CONN 1
