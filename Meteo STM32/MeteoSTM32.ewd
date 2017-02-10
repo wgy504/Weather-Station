@@ -45,7 +45,7 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\debugger\ST\STM32F103V8.ddf</state>
+          <state>$TOOLKIT_DIR$\CONFIG\debugger\ST\STM32F103C8.ddf</state>
         </option>
         <option>
           <name>RunToEnable</name>
@@ -1102,7 +1102,7 @@
         <debug>1</debug>
         <option>
           <name>CRDIDriverDll</name>
-          <state>###Uninitialized###</state>
+          <state>Browse to your RDI driver</state>
         </option>
         <option>
           <name>CRDILogFileCheck</name>
@@ -1159,11 +1159,11 @@
         <debug>1</debug>
         <option>
           <name>OCDriverInfo</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCSTLinkInterfaceRadio</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCSTLinkInterfaceCmdLine</name>

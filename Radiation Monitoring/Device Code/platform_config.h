@@ -32,6 +32,13 @@
 #define ESP_CP_PD_OFF             GPIO_LOW(ESP_CP_PD_PORT, ESP_CP_PD_PIN)
 
 
+#define DRF_ENABLE              GPIO_SetBits(DRF_EN_PORT, DRF_EN_PIN);          
+#define DRF_DISABLE             GPIO_ResetBits(DRF_EN_PORT, DRF_EN_PIN);       
+
+#define DRF_SET_ENABLE          GPIO_ResetBits(DRF_SET_PORT, DRF_SET_PIN);     
+#define DRF_SET_DISABLE         GPIO_SetBits(DRF_SET_PORT, DRF_SET_PIN);        
+
+
 #define LED_ON            GPIO_LOW(PORT_LED, LED);
 #define LED_OFF           GPIO_HIGH(PORT_LED, LED);
 #define LED_TOGGLE        GPIO_TOGGLE(PORT_LED, LED);

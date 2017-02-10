@@ -39,6 +39,9 @@ TDrf_Settings g_stDrfSettings;
 
 void vRadMonTask (void *pvParameters)
 {
+<<<<<<< HEAD
+  //BUZ_ON;
+=======
   TDrf_Settings stDrfSettings;
   //Инит структуры конфигурации радиомодема
   stDrfSettings.uiFreq = 454130;
@@ -78,6 +81,7 @@ void vRadMonTask (void *pvParameters)
   
   DPS("\r\n-=D_RUN APPL=-\r\n");
   
+>>>>>>> 280e39629db1711e5709af53734008bbf5f9ecde
   uint16_t usBackCMP = 0;
   uint32_t uiTimeMeas = 0;
   uint8_t ucMeanCounter = 0;
@@ -93,11 +97,15 @@ void vRadMonTask (void *pvParameters)
   osDelay(SLEEP_MS_300);
   ClearCPM();
 
+<<<<<<< HEAD
+  DP_DBG("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
+=======
+>>>>>>> 280e39629db1711e5709af53734008bbf5f9ecde
   for(int i=59; i > 0; i--) {
     IWDG_ReloadCounter();
     xLastWakeTimerDelay = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTimerDelay, (SLEEP_MS_1000 / portTICK_RATE_MS));
-    DP_GSM(" %i\r\n", i);
+    DP_DBG(" %i\r\n", i);
   }
   if(xQueueServDataOW != NULL) {
      xQueueReceive(xQueueServDataOW,  &fIndTempValue, (portTickType) 0);
@@ -122,8 +130,14 @@ void vRadMonTask (void *pvParameters)
       
       ucMeanCounter++;
       
+<<<<<<< HEAD
+      DP_DBG("\r\nD_CUR DATA:\r\nCurCPM %i\r\nCurDose %.00fmR\r\nCurTemperature %.01fC\r\n", usCPM, stServerData.fDose, stServerData.fIntTemperatur);      
+      DP_DBG("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
+      DP_DBG("D_WAITING CHANGE #%i\r\n", usMeanCounterDay);
+=======
       DP_GSM("\r\nD_CUR DATA:\r\nCurCPM %i\r\nCurDose %.00fmR\r\nCurTemperature %.01fC\r\n", usCPM, stServerData.fDose, stServerData.fIntTemperatur);      
       DP_GSM("D_MEAN COUNTER: %i\r\n\r\n", ucMeanCounter);
+>>>>>>> 280e39629db1711e5709af53734008bbf5f9ecde
       if(stServerData.fDose > 75) {
         BUZ_ON;
         osDelay(SLEEP_MS_10000);
@@ -148,8 +162,15 @@ void vRadMonTask (void *pvParameters)
             
           stServerData.fDose = (float)uiMeanValueDose;
           stServerData.iCPM = (int)uiMeanValueCPM;
-          DP_GSM("\r\nD_MEAN DATA:\r\nMeanCPM %i\r\nMeanDose %.00fmR\r\nCurTemperature %.01fC\r\n\r\n", uiMeanValueCPM, stServerData.fDose, stServerData.fIntTemperatur);
+          DP_DBG("\r\nD_MEAN DATA:\r\nMeanCPM %i\r\nMeanDose %.00fmR\r\nCurTemperature %.01fC\r\n\r\n", uiMeanValueCPM, stServerData.fDose, stServerData.fIntTemperatur);
           xQueueSendToFront(xQueueServerData, &stServerData, (portTickType) 1000);
+<<<<<<< HEAD
+          if(stServerData.fDoseDay) {
+             DP_DBG("\r\nD_DAY DATA:\r\nDayDose %.00fmR\r\n\r\n",stServerData.fDoseDay);
+             stServerData.fDoseDay = 0;
+          }
+=======
+>>>>>>> 280e39629db1711e5709af53734008bbf5f9ecde
           uiMeanValueDose = 0;
           memset(ga_usDoseValue, 0, sizeof(ga_usDoseValue));
           ucMeanCounter = 0;

@@ -30,8 +30,6 @@ int main()
   
   // Start Task //
   xTaskCreate(vRadMonTask, "vRadMonTask", configMINIMAL_STACK_SIZE * 4, NULL, tskIDLE_PRIORITY + 3, &xHandlevRadMonTask);
-  //xTaskCreate(vLcdTask, "vLcdTask", configMINIMAL_STACK_SIZE * 2, NULL, tskIDLE_PRIORITY + 1, &xHandleLcdTask);
-  //xTaskCreate(vGsmTask, "vGsmTask", configMINIMAL_STACK_SIZE * 8, NULL, tskIDLE_PRIORITY + 1, &xHandleGSM);
   xTaskCreate(vWifiEspTask, "vWifiEspTask", configMINIMAL_STACK_SIZE * 6, NULL, tskIDLE_PRIORITY + 2, &xHandleWifiTask);
   xTaskCreate(vOnewireTask, "vOnewireTask", configMINIMAL_STACK_SIZE * 2, NULL, tskIDLE_PRIORITY + 1, &xHandleOnewireTask);
   

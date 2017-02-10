@@ -24,17 +24,27 @@ void InitGPIO(void)
   RCC_APB2PeriphClockCmd(PORT_LED_LIGHT_LCD_CLK, ENABLE);
   
   // Init Led Light Pin
+  
   GPIO_InitStructure.GPIO_Pin = LED_LIGHT_LCD;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-  
   GPIO_Init(PORT_LED_LIGHT_LCD, &GPIO_InitStructure);
-  
+  /*
+  GPIO_InitStructure.GPIO_Pin = LED_LIGHT_LCD;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(PORT_LED_LIGHT_LCD, &GPIO_InitStructure);
+  GPIO_SetBits(PORT_LED_LIGHT_LCD, LED_LIGHT_LCD);
+  */
   
     // Init But
   GPIO_InitStructure.GPIO_Pin = BUT1 | BUT2 | BUT3;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
   GPIO_Init(PORT_BUT, &GPIO_InitStructure);
+  
+  GPIO_InitStructure.GPIO_Pin = BUT4;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
   /****************************************/
 }
 
@@ -60,7 +70,7 @@ void InitTIM3(void)
   TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;                
   TIM_OC1Init(TIM3, &TIM_OCInitStructure);
   
-  TIM_SetCompare1(TIM3, usTIMET1_CCR1_Val);
+  TIM_SetCompare1(TIM3, sTIMET1_CCR1_Val);
   TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
   TIM_ARRPreloadConfig(TIM3, ENABLE);
 

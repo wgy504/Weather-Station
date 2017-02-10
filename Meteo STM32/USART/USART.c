@@ -5,13 +5,6 @@ uint16_t index_read_offset_uart1;
 uint16_t index_read_offset_uart2;
 uint16_t index_read_offset_uart3;
 
-_Bool bGPS_Buffer_Data_Full_Half;
-
-_Bool GpsBufNumber(void)
-{
-  return bGPS_Buffer_Data_Full_Half;
-}
-
 void InitUSART1(uint32_t baud_rate)
 {
     // Init Structure
@@ -174,7 +167,7 @@ void DMA_USART1_Configuration(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
   
-  DMA_ITConfig(USART1_Rx_DMA_Channel, DMA_IT_TC | DMA_IT_TE, ENABLE);
+  DMA_ITConfig(USART1_Rx_DMA_Channel, DMA_IT_TC, ENABLE);
   
   index_read_offset_uart1 = 0;
 }
@@ -231,18 +224,7 @@ void DMA_USART2_Configuration(void)
   DMA_Cmd(USART2_Tx_DMA_Channel, ENABLE);
   /* Enable USART2 RX DMA1 Channel */
   DMA_Cmd(USART2_Rx_DMA_Channel, ENABLE);
-  
-  // Interrupts
-  NVIC_InitTypeDef NVIC_InitStructure;
-  
-  NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel6_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-  
-  DMA_ITConfig(USART2_Rx_DMA_Channel, DMA_IT_TC | DMA_IT_TE, ENABLE);
-  
+    
   index_read_offset_uart2 = 0;
 }
 
@@ -293,19 +275,6 @@ void DMA_USART3_Configuration(void)
   DMA_Cmd(USART3_Tx_DMA_Channel, ENABLE);
   /* Enable USART3 RX DMA1 Channel */
   DMA_Cmd(USART3_Rx_DMA_Channel, ENABLE);
-  
-
-    // Interrupts
-  NVIC_InitTypeDef NVIC_InitStructure;
-  
-  NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel3_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-  
-  DMA_ITConfig(USART3_Rx_DMA_Channel, DMA_IT_TC | DMA_IT_HT, ENABLE);
-  
 
   index_read_offset_uart3 = 0;
 }
@@ -345,23 +314,63 @@ void DMA1_Channel6_IRQHandler(void)
   }
 }
 
+/* NMEA SENTENCES */
+#define NMEA_SENT_MAX   4
+
+const char strMsgNmeaFilter[][NMEA_SENT_MAX] = {
+#ifndef GPS_GLL_DISABLE
+   "GLL",
+#endif
+#ifndef GPS_RMC_DISABLE
+   "RMC",
+#endif
+#ifndef GPS_VTG_DISABLE   
+   "VTG",
+#endif  
+#ifndef GPS_GGA_DISABLE   
+   "GGA",
+#endif
+#ifndef GPS_GSA_DISABLE  
+   "GSA",
+#endif
+#ifndef GPS_GSV_DISABLE 
+   "GSV",
+#endif
+};
+
 void DMA1_Channel5_IRQHandler(void)
 {
+  static char aucGpsBuffIn[100];
+  static int Index = 0;
   BaseType_t xHigherPriorityTaskWoken;
   xHigherPriorityTaskWoken = pdTRUE;
   if (DMA_GetITStatus(DMA1_IT_TC5)) // Full
   {
-    bGPS_Buffer_Data_Full_Half = 1;
+    uint8_t byte_gps = g_aucRxBufferUSART1[0];
+    aucGpsBuffIn[Index] = byte_gps;
+    Index++;
+    
+    if(Index > sizeof(aucGpsBuffIn)) {  //Защита от переполнения буфера.
+       Index = 0;
+    }
+    
+    if(byte_gps == '\n') {
+       /* фильтрация не корректных NMEA телеграмм */
+       _Bool bMesTrue = FALSE;
+       for(uint8_t i=0; i<sizeof(strMsgNmeaFilter)/NMEA_SENT_MAX/sizeof(char); i++) {
+          if(strstr(aucGpsBuffIn, strMsgNmeaFilter[i]) > NULL) {
+             bMesTrue = TRUE;
+             break;
+          }
+       }
+       if(bMesTrue) {      
+         CpyGpsBuf(aucGpsBuffIn, Index);
+         xSemaphoreGiveFromISR(mGPS_DATA_ARRIVAL, &xHigherPriorityTaskWoken);
+       }
+       Index = 0;
+    }
     DMA_ClearITPendingBit(DMA1_IT_TC5);
   }
-  
-  if (DMA_GetITStatus(DMA1_IT_HT5)) //Half
-  {
-    bGPS_Buffer_Data_Full_Half = 0;
-    DMA_ClearITPendingBit(DMA1_IT_HT5);
-  }
-  
-  xSemaphoreGiveFromISR(mGPS_DATA_ARRIVAL, &xHigherPriorityTaskWoken);
 }
 
 // Работа по DMA //

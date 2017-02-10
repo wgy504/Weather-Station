@@ -95,16 +95,19 @@ void vWifiEspTask (void *pvParameters)
   {
 
     /* Обработка WEB клиента на два сервера */
-    if( (xQueueReceive(xQueueServerData,  &stServerData, (portTickType) 1000)) && (xQueueServerData != 0) ) {  
+    if( (xQueueReceive(xQueueServerData,  &stServerData, (portTickType) 1000)) && (xQueueServerData != 0) ) { 
+      _Bool fResetErr = 0;
+      DRF_DISABLE;
       iNumConnect = 2;
       stServerDataForSend.fDose = stServerData.fDose;
       stServerDataForSend.iCPM = stServerData.iCPM;
       stServerDataForSend.fIntTemperatur = stServerData.fIntTemperatur;
-      stServerDataForSend.stTimeRecords = stServerData.stTimeRecords;      
-      _Bool fResetErr = 0;
+      stServerDataForSend.stTimeRecords = stServerData.stTimeRecords;
       
-      
-#if 0
+      if(stServerData.fDoseDay) {
+        stServerDataForSend.fDoseDay = stServerData.fDoseDay;
+      }
+#if 0  
       //Настройка первой конфигурации
       if(ucSendDataServerFail != 2)
       {
@@ -424,6 +427,7 @@ int SendDataArchiveFirstServer(int iProf, char *ptEspRet, uint16_t Len, TEspNetC
   
   if(!(strstr(strTempCmd, ">") > 0)) {
     return ERR_SEND_DATA;
+    //return ERR_SEND_DATA;
   }
    
   DPS("esp [->] ");

@@ -1,8 +1,7 @@
 
-#include "includes.h"
 #include "dht11.h"
 
-int read_cycle(int cur_tics, uint8_t neg_tic)
+int read_cycle_dht11(int cur_tics, uint8_t neg_tic)
 {
   int cnt_tics;
   
@@ -53,9 +52,9 @@ int Read_DHT11(uint8_t* pBuf)
   cnt = 0;
   for(i=0; (i<83 && cnt<MAX_TICS); i++){
     if (i & 1){
-      cnt = read_cycle(cnt, 1);
+      cnt = read_cycle_dht11(cnt, 1);
     } else {
-      cnt = read_cycle(cnt, 0);
+      cnt = read_cycle_dht11(cnt, 0);
       dt[i/2]= cnt;
     }
   }

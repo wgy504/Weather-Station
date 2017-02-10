@@ -42,6 +42,19 @@ void InitGPIO(void)
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(ESP_RST_PORT, &GPIO_InitStructure);
   GPIO_HIGH(ESP_RST_PORT, ESP_RST_PIN);
+  
+  /* RADIO */
+  GPIO_InitStructure.GPIO_Pin = DRF_EN_PIN;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(DRF_EN_PORT, &GPIO_InitStructure);
+  DRF_ENABLE;
+  
+  GPIO_InitStructure.GPIO_Pin = DRF_SET_PIN;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(DRF_SET_PORT, &GPIO_InitStructure);
+  DRF_SET_DISABLE;
 }
 
 void InitTIM3(void)
