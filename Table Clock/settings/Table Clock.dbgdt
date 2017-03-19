@@ -42,7 +42,7 @@
       </Disassembly>
       <WATCH_1>
         <expressions>
-          <item></item>
+          <item/>
         </expressions>
         <col-names>
           <item>Expression</item>
@@ -61,7 +61,7 @@
         <expressions>
           <item>BufferI2C_Rx1</item>
           <item>BufferI2C_Tx1</item>
-          <item></item>
+          <item/>
         </expressions>
         <col-names>
           <item>Expression</item>

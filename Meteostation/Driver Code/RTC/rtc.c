@@ -5,6 +5,7 @@
 /*--------------------------------------------------------------------------  */
 
 #include "rtc.h"
+#include "calendar.h"
 
 #define FIRSTYEAR   2000		// start year
 #define FIRSTDAY    6			// 0 = Sunday
@@ -54,7 +55,7 @@ static uint8_t isDST( const RTC_t *t )
 *  DST according to German standard
 *  Based on code from Peter Dannegger found in the microcontroller.net forum.
 *******************************************************************************/
-static uint8_t adjustDST( RTC_t *t )
+uint8_t adjustDST( RTC_t *t )
 {
 	uint8_t hour, day, wday, month;			// locals for faster access
 
@@ -216,11 +217,13 @@ uint32_t struct_to_counter( const RTC_t *t )
 void rtc_gettime (RTC_t *rtc)
 {
 	uint32_t t;
-
+        
 	while ( ( t = RTC_GetCounter() ) != RTC_GetCounter() ) { ; }
-        t-=946684800;
+        /*
 	counter_to_struct( t, rtc ); // get non DST time
 	adjustDST( rtc );
+        */
+        Sec2Date(rtc, t);
 }
 
 /*******************************************************************************
@@ -230,7 +233,7 @@ void rtc_gettime (RTC_t *rtc)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void my_RTC_SetCounter(uint32_t cnt)
+static void my_RTC_SetCounter(uint32_t cnt)
 {
 	/* Wait until last write operation on RTC registers has finished */
 	RTC_WaitForLastTask();
@@ -250,21 +253,20 @@ void my_RTC_SetCounter(uint32_t cnt)
 *******************************************************************************/
 void rtc_settime (RTC_t *rtc)
 {
-	uint32_t cnt;
+	uint32_t cnt = Date2Sec(rtc);
+        /*
 	volatile uint16_t i;
 	RTC_t ts;
-
 	cnt = struct_to_counter( rtc ); // non-DST counter-value
-        cnt+= 946684800;
 	counter_to_struct( cnt, &ts );  // normalize struct (for weekday)
 	if ( isDST( &ts ) ) {
 		cnt -= 60*60; // Subtract one hour
 	}
+        */
 	PWR_BackupAccessCmd(ENABLE);
 	my_RTC_SetCounter( cnt );
 	PWR_BackupAccessCmd(DISABLE);
 }
-
 /*******************************************************************************
 * Function Name  : rtc_init
 * Description    : initializes HW RTC,
